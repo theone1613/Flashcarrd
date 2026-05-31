@@ -2,812 +2,274 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Flashcard Tiếng Anh — Tháng 1</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Flashcard Tieng Anh</title>
 <style>
-  :root {
-    --ink: #1a1a2e;
-    --paper: #f5f0e8;
-    --gold: #b8860b;
-    --gold-light: #d4a017;
-    --muted: #6b6560;
-    --line: #d4cfc6;
-    --correct: #2d6a4f;
-    --hard: #c8392b;
-    --ok: #1a3a6e;
-    --easy: #2d6a4f;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: 'Source Serif 4', Georgia, serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    padding: 14px 20px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    flex-shrink: 0;
-  }
-
-  .header-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    color: var(--gold);
-    letter-spacing: 1px;
-  }
-
-  .header-sub {
-    font-size: 11px;
-    color: rgba(245,240,232,0.4);
-    margin-top: 2px;
-    font-style: italic;
-  }
-
-  .week-tabs {
-    display: flex;
-    gap: 6px;
-  }
-
-  .week-tab {
-    padding: 4px 10px;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 20px;
-    font-size: 11px;
-    background: transparent;
-    color: rgba(245,240,232,0.5);
-    cursor: pointer;
-    font-family: 'Source Serif 4', serif;
-    transition: all 0.2s;
-  }
-
-  .week-tab.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  /* ── PROGRESS ── */
-  .progress-bar {
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    flex-shrink: 0;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--gold);
-    transition: width 0.4s ease;
-  }
-
-  .progress-info {
-    padding: 8px 20px 6px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: rgba(245,240,232,0.4);
-    flex-shrink: 0;
-  }
-
-  /* ── CARD AREA ── */
-  .card-area {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 20px;
-    perspective: 1000px;
-  }
-
-  .card-wrap {
-    width: 100%;
-    max-width: 380px;
-    aspect-ratio: 3/2;
-    cursor: pointer;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-wrap.flipped {
-    transform: rotateY(180deg);
-  }
-
-  .card-face {
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 24px;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-
-  .card-front {
-    background: var(--paper);
-    border: 1px solid var(--line);
-  }
-
-  .card-back {
-    background: linear-gradient(135deg, #1a3a6e 0%, #0d1f3c 100%);
-    border: 1px solid rgba(184,134,11,0.3);
-    transform: rotateY(180deg);
-  }
-
-  .card-label {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    opacity: 0.4;
-    margin-bottom: 12px;
-    font-weight: 300;
-  }
-
-  .card-front .card-label { color: var(--ink); }
-  .card-back .card-label { color: var(--paper); }
-
-  .card-word {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(24px, 6vw, 36px);
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.2;
-  }
-
-  .card-front .card-word { color: var(--ink); }
-  .card-back .card-word { color: var(--paper); }
-
-  .card-phonetic {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 8px;
-    font-style: italic;
-  }
-
-  .card-week-tag {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    font-size: 9px;
-    letter-spacing: 1px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    background: rgba(184,134,11,0.15);
-    color: var(--gold);
-    border: 1px solid rgba(184,134,11,0.3);
-  }
-
-  .tap-hint {
-    position: absolute;
-    bottom: 14px;
-    font-size: 10px;
-    opacity: 0.35;
-    letter-spacing: 1px;
-  }
-
-  .card-front .tap-hint { color: var(--ink); }
-  .card-back .tap-hint { color: var(--paper); }
-
-  /* ── RATING BUTTONS ── */
-  .rating-area {
-    padding: 0 20px 16px;
-    flex-shrink: 0;
-  }
-
-  .rating-label {
-    text-align: center;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: rgba(245,240,232,0.3);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .rating-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-  }
-
-  .rating-btn {
-    padding: 13px 8px;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Source Serif 4', serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    opacity: 0.4;
-    pointer-events: none;
-  }
-
-  .rating-btn.enabled {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .rating-btn:active { transform: scale(0.95); }
-
-  .rating-btn .btn-icon { font-size: 18px; }
-  .rating-btn .btn-sub { font-size: 9px; letter-spacing: 1px; opacity: 0.7; }
-
-  .btn-hard { background: rgba(200,57,43,0.2); color: #e8776b; border: 1px solid rgba(200,57,43,0.3); }
-  .btn-ok   { background: rgba(26,58,110,0.4); color: #7fa8e8; border: 1px solid rgba(26,58,110,0.5); }
-  .btn-easy { background: rgba(45,106,79,0.25); color: #6db896; border: 1px solid rgba(45,106,79,0.35); }
-
-  /* ── BOTTOM STATS ── */
-  .stats-bar {
-    padding: 8px 20px 20px;
-    display: flex;
-    justify-content: space-around;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    flex-shrink: 0;
-  }
-
-  .stat-item {
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    line-height: 1;
-  }
-
-  .stat-num.hard { color: #e8776b; }
-  .stat-num.ok   { color: #7fa8e8; }
-  .stat-num.easy { color: #6db896; }
-
-  .stat-label {
-    font-size: 9px;
-    letter-spacing: 1px;
-    color: rgba(245,240,232,0.3);
-    text-transform: uppercase;
-    margin-top: 3px;
-  }
-
-  /* ── DONE SCREEN ── */
-  .done-screen {
-    display: none;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 24px;
-    text-align: center;
-  }
-
-  .done-screen.show { display: flex; }
-
-  .done-icon { font-size: 48px; margin-bottom: 16px; }
-
-  .done-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .done-sub {
-    font-size: 14px;
-    color: rgba(245,240,232,0.5);
-    line-height: 1.6;
-    margin-bottom: 28px;
-    font-style: italic;
-  }
-
-  .done-scores {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-
-  .done-score {
-    text-align: center;
-    padding: 14px 20px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.05);
-  }
-
-  .done-score-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-  }
-
-  .done-score-label { font-size: 10px; letter-spacing: 1px; opacity: 0.5; margin-top: 4px; }
-
-  .btn-restart {
-    padding: 14px 36px;
-    background: var(--gold);
-    color: var(--ink);
-    border: none;
-    border-radius: 10px;
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: opacity 0.2s;
-    margin-bottom: 12px;
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .btn-restart:active { opacity: 0.8; }
-
-  .btn-review-hard {
-    padding: 12px 36px;
-    background: transparent;
-    color: #e8776b;
-    border: 1px solid rgba(200,57,43,0.4);
-    border-radius: 10px;
-    font-family: 'Source Serif 4', serif;
-    font-size: 13px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .btn-review-hard:active { opacity: 0.7; }
-  .btn-review-hard.hidden { display: none; }
-
-/* ── TAB BAR ── */
-.tab-bar{display:flex;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
-.tab-btn{flex:1;padding:9px 4px;background:transparent;border:none;color:rgba(245,240,232,0.4);font-family:'Source Serif 4',serif;font-size:12px;cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;letter-spacing:0.5px;}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
-
-/* ── LISTEN TAB ── */
-.listen-area{padding:12px 16px;flex:1;overflow-y:auto;}
-.listen-week-title{font-family:'Playfair Display',serif;font-size:12px;color:var(--gold);margin:14px 0 8px;letter-spacing:1px;text-transform:uppercase;}
-.listen-week-title:first-child{margin-top:2px;}
-.listen-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;transition:background 0.18s,border-color 0.18s;-webkit-tap-highlight-color:transparent;}
-.listen-card:active{background:rgba(184,134,11,0.12);border-color:rgba(184,134,11,0.35);}
-.listen-icon{width:36px;height:36px;border-radius:50%;background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.25);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.listen-info{flex:1;min-width:0;}
-.listen-title{font-size:12px;color:var(--paper);font-weight:600;line-height:1.35;margin-bottom:2px;}
-.listen-meta{font-size:10px;color:rgba(245,240,232,0.38);letter-spacing:0.3px;}
-.listen-arrow{font-size:16px;color:rgba(245,240,232,0.2);flex-shrink:0;}
-.listen-note{font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;padding:10px 4px 16px;text-align:center;}
-.card-phonetic{font-size:12px;color:#888;font-style:italic;margin-top:4px;letter-spacing:0.5px;}
-.speak-btn{background:rgba(184,134,11,0.15);border:1px solid rgba(184,134,11,0.3);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:8px;transition:all 0.15s;font-size:16px;color:var(--gold);}
-.speak-btn:active{background:rgba(184,134,11,0.35);transform:scale(0.93);}
-.speak-btn.speaking{background:rgba(184,134,11,0.3);border-color:var(--gold);}
-.tab-content{display:none;flex:1;flex-direction:column;overflow-y:auto;min-height:0;}
-.tab-content.show{display:flex;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a2e;color:#f5f0e8;font-family:Georgia,serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.hdr{padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.htitle{font-size:14px;color:#b8860b;font-weight:bold}
+.hsub{font-size:10px;color:rgba(245,240,232,.4);margin-top:1px}
+.wtabs{display:flex;gap:5px}
+.wtab{padding:4px 9px;border:1px solid rgba(255,255,255,.2);border-radius:20px;font-size:11px;background:transparent;color:rgba(245,240,232,.45);cursor:pointer;font-family:Georgia,serif}
+.wtab.on{background:#b8860b;border-color:#b8860b;color:#1a1a2e;font-weight:700}
+.tbar{display:flex;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.08)}
+.tbtn{flex:1;padding:9px 4px;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,.4);font-size:12px;cursor:pointer;font-family:Georgia,serif}
+.tbtn.on{color:#b8860b;border-bottom-color:#b8860b}
+.panel{display:none;flex:1;flex-direction:column;min-height:0}
+.panel.on{display:flex}
+.pbar{height:3px;background:rgba(255,255,255,.07);flex-shrink:0}
+.pfill{height:100%;background:#b8860b;transition:width .3s}
+.pinfo{padding:5px 14px 4px;display:flex;justify-content:space-between;font-size:10px;color:rgba(245,240,232,.35);flex-shrink:0}
+.carea{flex:1;display:flex;align-items:center;justify-content:center;padding:8px 14px;min-height:0}
+.cwrap{width:100%;max-width:380px;height:230px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .5s}
+.cwrap.flip{transform:rotateY(180deg)}
+.cface{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cfront{background:#f5f0e8}
+.cback{background:#0d1f3c;border:1px solid rgba(184,134,11,.25);transform:rotateY(180deg);justify-content:flex-start;padding:0}
+.clabel{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#6b6560;margin-bottom:6px}
+.cword{font-size:clamp(18px,5vw,26px);font-weight:bold;color:#1a1a2e;text-align:center;padding:0 10px}
+.cphon{font-size:11px;color:#888;font-style:italic;margin-top:4px}
+.cspeak{background:rgba(184,134,11,.15);border:1px solid rgba(184,134,11,.3);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:6px;font-size:14px;color:#b8860b;flex-shrink:0}
+.chint{font-size:9px;color:#6b6560;margin-top:4px;font-style:italic}
+.ctag{position:absolute;top:8px;right:8px;font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(184,134,11,.15);color:#b8860b;border:1px solid rgba(184,134,11,.3)}
+.bhead{padding:10px 13px 8px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;width:100%}
+.ben{font-size:clamp(14px,4vw,19px);font-weight:bold;color:#b8860b}
+.bvi{font-size:13px;color:rgba(245,240,232,.75);font-style:italic;margin-top:2px}
+.bbody{padding:8px 13px 10px;flex:1;overflow-y:auto;width:100%}
+.ublk{margin-bottom:8px}
+.ulbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:3px}
+.usen{font-size:11px;line-height:1.45;color:rgba(245,240,232,.9);font-style:italic;border-left:2px solid #b8860b;padding-left:7px;margin-bottom:2px}
+.utr{font-size:10px;color:rgba(245,240,232,.5);padding-left:9px;margin-bottom:3px}
+.nblk{background:rgba(184,134,11,.1);border:1px solid rgba(184,134,11,.2);border-radius:7px;padding:6px 9px;margin-top:6px}
+.nlbl{font-size:9px;letter-spacing:2px;color:#b8860b;text-transform:uppercase;margin-bottom:2px}
+.ntxt{font-size:10px;color:rgba(245,240,232,.75);line-height:1.5}
+.done{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.done.on{display:flex}
+.dicon{font-size:44px;margin-bottom:12px}
+.dtitle{font-size:22px;color:#b8860b;font-weight:bold;margin-bottom:6px}
+.dsub{font-size:12px;color:rgba(245,240,232,.5);margin-bottom:20px}
+.dscores{display:flex;gap:18px;margin-bottom:22px}
+.dsc{text-align:center;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.05)}
+.dnum{font-size:24px;font-weight:bold}
+.dlbl{font-size:9px;letter-spacing:1px;opacity:.45;margin-top:2px}
+.btnA{padding:12px;background:#b8860b;color:#1a1a2e;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;width:100%;max-width:240px;margin-bottom:9px;font-family:Georgia,serif}
+.btnB{padding:10px;background:transparent;color:#e8776b;border:1px solid rgba(200,57,43,.4);border-radius:9px;font-size:12px;cursor:pointer;width:100%;max-width:240px;font-family:Georgia,serif}
+.btnB.hide{display:none}
+.rarea{padding:0 14px 8px;flex-shrink:0}
+.rlbl{text-align:center;font-size:10px;letter-spacing:2px;color:rgba(245,240,232,.3);text-transform:uppercase;margin-bottom:6px}
+.rbtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.rbtn{padding:9px 5px;border:none;border-radius:9px;font-size:11px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.3;pointer-events:none;font-family:Georgia,serif}
+.rbtn.on{opacity:1;pointer-events:auto}
+.r1{background:rgba(200,57,43,.2);color:#e8776b;border:1px solid rgba(200,57,43,.3)}
+.r2{background:rgba(26,58,110,.4);color:#7fa8e8;border:1px solid rgba(26,58,110,.5)}
+.r3{background:rgba(45,106,79,.25);color:#6db896;border:1px solid rgba(45,106,79,.35)}
+.sbar{padding:5px 16px 10px;display:flex;justify-content:space-around;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.si{text-align:center}
+.sn{font-size:17px;font-weight:bold;line-height:1}
+.sn.h{color:#e8776b}.sn.o{color:#7fa8e8}.sn.e{color:#6db896}
+.sl{font-size:9px;letter-spacing:1px;color:rgba(245,240,232,.3);text-transform:uppercase;margin-top:2px}
+.larea{padding:10px 14px;flex:1;overflow-y:auto}
+.lwt{font-size:12px;color:#b8860b;margin:12px 0 7px;letter-spacing:1px;text-transform:uppercase;font-weight:bold}
+.lwt:first-child{margin-top:2px}
+.lcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:11px;text-decoration:none}
+.lcard:active{background:rgba(184,134,11,.12)}
+.lico{width:34px;height:34px;border-radius:50%;background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.25);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.linf{flex:1}
+.ltitle{font-size:12px;color:#f5f0e8;font-weight:600;margin-bottom:2px}
+.lmeta{font-size:10px;color:rgba(245,240,232,.38)}
+.larr{font-size:15px;color:rgba(245,240,232,.2);flex-shrink:0}
+.lnote{font-size:10px;color:rgba(245,240,232,.3);font-style:italic;padding:8px 4px 14px;text-align:center}
 </style>
 </head>
 <body>
-<div class="header">
-  <div>
-    <div class="header-title">Flashcard · Tháng 1</div>
-    <div class="header-sub">Tiếng Anh cho Công Việc</div>
-  </div>
-  <div class="week-tabs">
-    <button class="week-tab active" onclick="setWeek(0)">Tất cả</button>
-    <button class="week-tab" onclick="setWeek(1)">T1</button>
-    <button class="week-tab" onclick="setWeek(2)">T2</button>
-    <button class="week-tab" onclick="setWeek(3)">T3</button>
-    <button class="week-tab" onclick="setWeek(4)">T4</button>
-  </div>
+<div class="hdr">
+<div><div class="htitle">Flashcard Thang 1</div><div class="hsub">Tieng Anh - Cong Viec</div></div>
+<div class="wtabs">
+<button class="wtab on" onclick="setW(0)">Tat ca</button>
+<button class="wtab" onclick="setW(1)">T1</button>
+<button class="wtab" onclick="setW(2)">T2</button>
+<button class="wtab" onclick="setW(3)">T3</button>
+<button class="wtab" onclick="setW(4)">T4</button>
+</div></div>
+<div class="tbar">
+<button class="tbtn on" onclick="setTab(0)">Flashcard</button>
+<button class="tbtn" onclick="setTab(1)">Nghe</button>
 </div>
-
-
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('flashcard')">🃏 Flashcard</button>
-  <button class="tab-btn" onclick="switchTab('listen')">🎧 Nghe</button>
+<div class="panel on" id="p0">
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+<div class="pinfo"><span id="pt">0/0</span><span id="pp">0%</span></div>
+<div class="carea" id="ca">
+<div class="cwrap" id="cw" onclick="doFlip()">
+<div class="cface cfront">
+<div class="clabel">TIENG ANH</div>
+<div class="cword" id="cen">-</div>
+<div class="cphon" id="cph"></div>
+<div class="cspeak" id="csp" onclick="doSpeak(event)">&#128266;</div>
+<div class="chint">An the de xem nghia va vi du</div>
+<div class="ctag" id="ctag">T1</div>
 </div>
-
-<div class="tab-content show" id="tabFlashcard">
-<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-<div class="progress-info">
-  <span id="progressText">0 / 0</span>
-  <span id="progressPct">0%</span>
+<div class="cface cback">
+<div class="bhead"><div class="ben" id="cben">-</div><div class="bvi" id="cbvi">-</div></div>
+<div class="bbody" id="cbb"></div>
 </div>
-
-<!-- CARD -->
-<div class="card-area" id="cardArea">
-  <div class="card-wrap" id="cardWrap" onclick="flipCard()">
-    <div class="card-face card-front">
-      <div class="card-label">TIẾNG ANH</div>
-      <div class="card-word" id="cardFrontWord">—</div>
-      <div class="card-phonetic" id="cardPhonetic"></div>
-      <button class="speak-btn" id="speakBtn" onclick="speakWord(event)" title="Nghe phát âm">🔊</button>
-      <div class="tap-hint">Ấn để xem nghĩa</div>
-      <div class="card-week-tag" id="cardWeekTag">T1</div>
-    </div>
-    <div class="card-face card-back">
-      <div class="card-label">TIẾNG VIỆT</div>
-      <div class="card-word" id="cardBackWord">—</div>
-      <div class="tap-hint">Ấn để lật lại</div>
-    </div>
-  </div>
+</div></div>
+<div class="done" id="dn">
+<div class="dicon">&#127881;</div>
+<div class="dtitle">Hoan thanh!</div>
+<div class="dsub" id="dsb"></div>
+<div class="dscores">
+<div class="dsc"><div class="dnum" id="dh" style="color:#e8776b">0</div><div class="dlbl">KHO</div></div>
+<div class="dsc"><div class="dnum" id="do2" style="color:#7fa8e8">0</div><div class="dlbl">ON</div></div>
+<div class="dsc"><div class="dnum" id="de" style="color:#6db896">0</div><div class="dlbl">DE</div></div>
 </div>
-
-<!-- DONE SCREEN -->
-<div class="done-screen" id="doneScreen">
-  <div class="done-icon">🎉</div>
-  <div class="done-title">Hoàn thành!</div>
-  <div class="done-sub" id="doneSubText">Bạn vừa ôn xong toàn bộ bộ thẻ.<br/>Kết quả hôm nay:</div>
-  <div class="done-scores">
-    <div class="done-score">
-      <div class="done-score-num" id="doneHard" style="color:#e8776b">0</div>
-      <div class="done-score-label">Khó</div>
-    </div>
-    <div class="done-score">
-      <div class="done-score-num" id="doneOk" style="color:#7fa8e8">0</div>
-      <div class="done-score-label">Ổn</div>
-    </div>
-    <div class="done-score">
-      <div class="done-score-num" id="doneEasy" style="color:#6db896">0</div>
-      <div class="done-score-label">Dễ</div>
-    </div>
-  </div>
-  <button class="btn-restart" onclick="restartAll()">Học lại từ đầu</button>
-  <button class="btn-review-hard" id="btnReviewHard" onclick="reviewHard()">Ôn lại từ khó</button>
+<button class="btnA" onclick="doRestart()">Hoc lai tu dau</button>
+<button class="btnB hide" id="brh" onclick="doHard()">On lai tu kho</button>
 </div>
-
-<!-- RATING -->
-<div id="ratingArea">
-  <div class="rating-area">
-    <div class="rating-label">Bạn nhớ từ này không?</div>
-    <div class="rating-buttons">
-      <button class="rating-btn btn-hard" id="btnHard" onclick="rate('hard')">
-        <span class="btn-icon">😓</span>Khó
-        <span class="btn-sub">HỎI LẠI SỚM</span>
-      </button>
-      <button class="rating-btn btn-ok" id="btnOk" onclick="rate('ok')">
-        <span class="btn-icon">🤔</span>Ổn
-        <span class="btn-sub">NHỚ ĐƯỢC</span>
-      </button>
-      <button class="rating-btn btn-easy" id="btnEasy" onclick="rate('easy')">
-        <span class="btn-icon">😎</span>Dễ
-        <span class="btn-sub">NHỚ NGAY</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-num hard" id="statHard">0</div>
-      <div class="stat-label">Khó</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num ok" id="statOk">0</div>
-      <div class="stat-label">Ổn</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num easy" id="statEasy">0</div>
-      <div class="stat-label">Dễ</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="tab-content" id="tabListen">
-<div class="listen-area">
-
-<div class="listen-week-title">Tuần 1 — Chào hỏi &amp; Giới thiệu</div>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=english+greetings+for+beginners" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">English Greetings for Beginners</div><div class="listen-meta">YouTube · A1 · Nghe &amp; nhại theo từng câu</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/the-english-we-speak" target="_blank">
-  <div class="listen-icon">🎙</div>
-  <div class="listen-info"><div class="listen-title">BBC — The English We Speak</div><div class="listen-meta">BBC Learning English · A2 · Nghe hiểu bản ngữ</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<div class="listen-week-title">Tuần 2 — Hoạt động hàng ngày</div>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=daily+routine+english+beginner+listening" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">Daily Routine in English</div><div class="listen-meta">YouTube · A1-A2 · Nghe và ghi lại 5 hoạt động</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=present+simple+tense+listening+beginner" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">Present Simple — Listening Practice</div><div class="listen-meta">YouTube · A2 · Luyện nghe thì hiện tại đơn</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<div class="listen-week-title">Tuần 3 — Kể lại sự việc</div>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=past+simple+story+listening+beginners+english" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">Past Simple Story for Beginners</div><div class="listen-meta">YouTube · A2 · Ghi lại động từ quá khứ khi nghe</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/learning-english-stories" target="_blank">
-  <div class="listen-icon">🎙</div>
-  <div class="listen-info"><div class="listen-title">BBC Learning English — Stories</div><div class="listen-meta">BBC · A2 · Câu chuyện ngắn có phụ đề đầy đủ</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<div class="listen-week-title">Tuần 4 — Văn phòng &amp; Email</div>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=business+english+email+phrases+listening" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">Business Email Phrases in English</div><div class="listen-meta">YouTube · A2 · Đọc to email sau khi nghe</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=present+continuous+tense+listening+exercise+english" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">Present Continuous — Listening Exercise</div><div class="listen-meta">YouTube · A2 · Luyện nghe hiện tại tiếp diễn</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<div class="listen-week-title">Nguồn bổ sung — Dùng cả Tháng 1</div>
-
-<a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english" target="_blank">
-  <div class="listen-icon">🎙</div>
-  <div class="listen-info"><div class="listen-title">BBC 6 Minute English</div><div class="listen-meta">BBC · A2-B1 · Mỗi tuần 1 chủ đề, có transcript</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=english+with+lucy+beginner+lesson" target="_blank">
-  <div class="listen-icon">▶</div>
-  <div class="listen-info"><div class="listen-title">English with Lucy — Beginner</div><div class="listen-meta">YouTube · A1-A2 · Nói chậm, rõ, có phụ đề</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.youtube.com/results?search_query=legal+english+vocabulary+beginners+court" target="_blank">
-  <div class="listen-icon">⚖️</div>
-  <div class="listen-info"><div class="listen-title">Legal English Vocabulary</div><div class="listen-meta">YouTube · A2 · Từ vựng pháp lý — đúng chuyên môn</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.elllo.org" target="_blank">
-  <div class="listen-icon">🌐</div>
-  <div class="listen-info"><div class="listen-title">ELLLO — English Listening Lessons</div><div class="listen-meta">elllo.org · A1-B1 · Hàng nghìn bài nghe miễn phí</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/pronunciation" target="_blank">
-  <div class="listen-icon">🔊</div>
-  <div class="listen-info"><div class="listen-title">BBC Pronunciation Tips</div><div class="listen-meta">BBC Learning English · Phát âm chuẩn từng âm</div></div>
-  <div class="listen-arrow">›</div>
-</a>
-
-<div class="listen-note">Ấn vào bài để mở trình duyệt · Cần kết nối internet</div>
-</div>
-</div>
-
+<div id="ra">
+<div class="rarea">
+<div class="rlbl">Ban nho tu nay khong?</div>
+<div class="rbtns">
+<button class="rbtn r1" id="b1" onclick="doRate(0)"><span>&#128547;</span>Kho<span style="font-size:8px">HOI SOM</span></button>
+<button class="rbtn r2" id="b2" onclick="doRate(1)"><span>&#129300;</span>On<span style="font-size:8px">NHO DUOC</span></button>
+<button class="rbtn r3" id="b3" onclick="doRate(2)"><span>&#128526;</span>De<span style="font-size:8px">NHO NGAY</span></button>
+</div></div>
+<div class="sbar">
+<div class="si"><div class="sn h" id="sh">0</div><div class="sl">Kho</div></div>
+<div class="si"><div class="sn o" id="so">0</div><div class="sl">On</div></div>
+<div class="si"><div class="sn e" id="se">0</div><div class="sl">De</div></div>
+</div></div></div>
+<div class="panel" id="p1">
+<div class="larea">
+<div class="lwt">Tuan 1 - Chao hoi</div>
+<a class="lcard" href="https://www.youtube.com/results?search_query=english+greetings+beginners" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">English Greetings for Beginners</div><div class="lmeta">YouTube - A1</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.bbc.co.uk/learningenglish/english/features/the-english-we-speak" target="_blank"><div class="lico">&#127897;</div><div class="linf"><div class="ltitle">BBC The English We Speak</div><div class="lmeta">BBC - A2</div></div><div class="larr">&#8250;</div></a>
+<div class="lwt">Tuan 2 - Hang ngay</div>
+<a class="lcard" href="https://www.youtube.com/results?search_query=daily+routine+english+beginner" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">Daily Routine in English</div><div class="lmeta">YouTube - A1-A2</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.youtube.com/results?search_query=present+simple+listening+beginner" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">Present Simple Listening</div><div class="lmeta">YouTube - A2</div></div><div class="larr">&#8250;</div></a>
+<div class="lwt">Tuan 3 - Qua khu</div>
+<a class="lcard" href="https://www.youtube.com/results?search_query=past+simple+story+beginners" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">Past Simple Story</div><div class="lmeta">YouTube - A2</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.bbc.co.uk/learningenglish/english/features/learning-english-stories" target="_blank"><div class="lico">&#127897;</div><div class="linf"><div class="ltitle">BBC Learning Stories</div><div class="lmeta">BBC - A2 - Co phu de</div></div><div class="larr">&#8250;</div></a>
+<div class="lwt">Tuan 4 - Email</div>
+<a class="lcard" href="https://www.youtube.com/results?search_query=business+english+email+phrases" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">Business Email Phrases</div><div class="lmeta">YouTube - A2</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.youtube.com/results?search_query=present+continuous+listening+english" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">Present Continuous Listening</div><div class="lmeta">YouTube - A2</div></div><div class="larr">&#8250;</div></a>
+<div class="lwt">Nguon bo sung</div>
+<a class="lcard" href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english" target="_blank"><div class="lico">&#127897;</div><div class="linf"><div class="ltitle">BBC 6 Minute English</div><div class="lmeta">BBC - A2-B1 - Co transcript</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.youtube.com/results?search_query=english+with+lucy+beginner" target="_blank"><div class="lico">&#9654;</div><div class="linf"><div class="ltitle">English with Lucy</div><div class="lmeta">YouTube - A1-A2</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.youtube.com/results?search_query=legal+english+vocabulary+court" target="_blank"><div class="lico">&#9878;</div><div class="linf"><div class="ltitle">Legal English Vocabulary</div><div class="lmeta">YouTube - Tu vung phap ly</div></div><div class="larr">&#8250;</div></a>
+<a class="lcard" href="https://www.elllo.org" target="_blank"><div class="lico">&#127760;</div><div class="linf"><div class="ltitle">ELLLO Listening</div><div class="lmeta">elllo.org - A1-B1 - Mien phi</div></div><div class="larr">&#8250;</div></a>
+<div class="lnote">Can internet de mo link nghe</div>
+</div></div>
 <script>
-const ALL_CARDS = [
-  // Tuần 1
-  {en:"I am",vi:"tôi là / tôi thì",week:1,phon:"/ai æm/"},{en:"he is",vi:"anh ấy là",week:1,phon:"/hiː ɪz/"},
-  {en:"she is",vi:"cô ấy là",week:1,phon:"/ʃiː ɪz/"},{en:"we are",vi:"chúng tôi là",week:1,phon:"/wiː ɑːr/"},
-  {en:"they are",vi:"họ là",week:1,phon:"/ðeɪ ɑːr/"},{en:"name",vi:"tên",week:1,phon:"/neɪm/"},
-  {en:"job",vi:"công việc",week:1,phon:"/dʒɒb/"},{en:"family",vi:"gia đình",week:1,phon:"/ˈfæm.ɪ.li/"},
-  {en:"friend",vi:"bạn",week:1,phon:"/frend/"},{en:"colleague",vi:"đồng nghiệp",week:1,phon:"/ˈkɒl.iːɡ/"},
-  {en:"wife",vi:"vợ",week:1,phon:"/waɪf/"},{en:"husband",vi:"chồng",week:1,phon:"/ˈhʌz.bənd/"},
-  {en:"son",vi:"con trai",week:1,phon:"/sʌn/"},{en:"daughter",vi:"con gái",week:1,phon:"/ˈdɔː.tər/"},
-  {en:"home",vi:"nhà",week:1,phon:"/həʊm/"},{en:"city",vi:"thành phố",week:1,phon:"/ˈsɪt.i/"},
-  {en:"country",vi:"đất nước",week:1,phon:"/ˈkʌn.tri/"},{en:"nice to meet you",vi:"rất vui được gặp bạn",week:1,phon:"/naɪs tə miːt juː/"},
-  {en:"prosecutor",vi:"kiểm sát viên",week:1,phon:"/ˈprɒs.ɪ.kjuː.tər/"},{en:"lawyer",vi:"luật sư",week:1,phon:"/ˈlɔː.jər/"},
-  {en:"ready",vi:"sẵn sàng",week:1,phon:"/ˈred.i/"},{en:"busy",vi:"bận",week:1,phon:"/ˈbɪz.i/"},
-  {en:"tired",vi:"mệt",week:1,phon:"/ˈtaɪəd/"},{en:"happy",vi:"vui",week:1,phon:"/ˈhæp.i/"},
-  {en:"director",vi:"giám đốc",week:1,phon:"/dɪˈrek.tər/"},
-  // Tuần 2
-  {en:"work",vi:"làm việc",week:2,phon:"/wɜːrk/"},{en:"read",vi:"đọc",week:2,phon:"/riːd/"},
-  {en:"write",vi:"viết",week:2,phon:"/raɪt/"},{en:"study",vi:"học",week:2,phon:"/ˈstʌd.i/"},
-  {en:"meet",vi:"gặp",week:2,phon:"/miːt/"},{en:"start",vi:"bắt đầu",week:2,phon:"/stɑːrt/"},
-  {en:"finish",vi:"kết thúc",week:2,phon:"/ˈfɪn.ɪʃ/"},{en:"prepare",vi:"chuẩn bị",week:2,phon:"/prɪˈpeər/"},
-  {en:"report",vi:"báo cáo",week:2,phon:"/rɪˈpɔːrt/"},{en:"attend",vi:"tham dự",week:2,phon:"/əˈtend/"},
-  {en:"always",vi:"luôn luôn",week:2,phon:"/ˈɔːl.weɪz/"},{en:"usually",vi:"thường",week:2,phon:"/ˈjuː.ʒu.ə.li/"},
-  {en:"often",vi:"hay",week:2,phon:"/ˈɒf.ən/"},{en:"sometimes",vi:"thỉnh thoảng",week:2,phon:"/ˈsʌm.taɪmz/"},
-  {en:"rarely",vi:"hiếm khi",week:2,phon:"/ˈreər.li/"},{en:"never",vi:"không bao giờ",week:2,phon:"/ˈnev.ər/"},
-  {en:"every day",vi:"mỗi ngày",week:2,phon:"/ˈev.ri deɪ/"},{en:"speak",vi:"nói",week:2,phon:"/spiːk/"},
-  {en:"go",vi:"đi",week:2,phon:"/ɡəʊ/"},{en:"watch",vi:"xem",week:2,phon:"/wɒtʃ/"},
-  {en:"office",vi:"văn phòng",week:2,phon:"/ˈɒf.ɪs/"},{en:"court",vi:"toà án",week:2,phon:"/kɔːrt/"},
-  {en:"law",vi:"luật",week:2,phon:"/lɔː/"},{en:"news",vi:"tin tức",week:2,phon:"/njuːz/"},
-  {en:"coffee",vi:"cà phê",week:2,phon:"/ˈkɒf.i/"},
-  // Tuần 3
-  {en:"yesterday",vi:"hôm qua",week:3,phon:"/ˈjes.tə.deɪ/"},{en:"today",vi:"hôm nay",week:3,phon:"/təˈdeɪ/"},
-  {en:"tomorrow",vi:"ngày mai",week:3,phon:"/təˈmɒr.əʊ/"},{en:"last week",vi:"tuần trước",week:3,phon:"/lɑːst wiːk/"},
-  {en:"morning",vi:"buổi sáng",week:3,phon:"/ˈmɔː.nɪŋ/"},{en:"afternoon",vi:"buổi chiều",week:3,phon:"/ˌɑːf.təˈnuːn/"},
-  {en:"evening",vi:"buổi tối",week:3,phon:"/ˈiːv.nɪŋ/"},{en:"meeting",vi:"cuộc họp",week:3,phon:"/ˈmiː.tɪŋ/"},
-  {en:"case",vi:"vụ việc / vụ án",week:3,phon:"/keɪs/"},{en:"document",vi:"tài liệu",week:3,phon:"/ˈdɒk.jʊ.mənt/"},
-  {en:"decision",vi:"quyết định",week:3,phon:"/dɪˈsɪʒ.ən/"},{en:"went",vi:"đã đi (go)",week:3,phon:"/went/"},
-  {en:"had",vi:"đã có (have)",week:3,phon:"/hæd/"},{en:"was",vi:"đã là - số ít",week:3,phon:"/wɒz/"},
-  {en:"were",vi:"đã là - số nhiều",week:3,phon:"/wɜːr/"},{en:"did",vi:"đã làm (do)",week:3,phon:"/dɪd/"},
-  {en:"wrote",vi:"đã viết (write)",week:3,phon:"/rəʊt/"},{en:"met",vi:"đã gặp (meet)",week:3,phon:"/met/"},
-  {en:"said",vi:"đã nói (say)",week:3,phon:"/sed/"},{en:"worked",vi:"đã làm việc",week:3,phon:"/wɜːrkt/"},
-  {en:"finished",vi:"đã hoàn thành",week:3,phon:"/ˈfɪn.ɪʃt/"},{en:"prepared",vi:"đã chuẩn bị",week:3,phon:"/prɪˈpeərd/"},
-  {en:"attended",vi:"đã tham dự",week:3,phon:"/əˈten.dɪd/"},{en:"studied",vi:"đã học",week:3,phon:"/ˈstʌd.id/"},
-  {en:"week",vi:"tuần",week:3,phon:"/wiːk/"},
-  // Tuần 4
-  {en:"email",vi:"thư điện tử",week:4,phon:"/ˈiː.meɪl/"},{en:"phone",vi:"điện thoại",week:4,phon:"/fəʊn/"},
-  {en:"schedule",vi:"lịch trình",week:4,phon:"/ˈsked.juːl/"},{en:"deadline",vi:"hạn chót",week:4,phon:"/ˈded.laɪn/"},
-  {en:"request",vi:"yêu cầu",week:4,phon:"/rɪˈkwest/"},{en:"reply",vi:"trả lời",week:4,phon:"/rɪˈplaɪ/"},
-  {en:"information",vi:"thông tin",week:4,phon:"/ˌɪn.fəˈmeɪ.ʃən/"},{en:"important",vi:"quan trọng",week:4,phon:"/ɪmˈpɔː.tənt/"},
-  {en:"available",vi:"rảnh / sẵn có",week:4,phon:"/əˈveɪ.lə.bəl/"},{en:"now",vi:"bây giờ",week:4,phon:"/naʊ/"},
-  {en:"attach",vi:"đính kèm",week:4,phon:"/əˈtætʃ/"},{en:"send",vi:"gửi",week:4,phon:"/send/"},
-  {en:"receive",vi:"nhận",week:4,phon:"/rɪˈsiːv/"},{en:"need",vi:"cần",week:4,phon:"/niːd/"},
-  {en:"dear",vi:"kính gửi",week:4,phon:"/dɪər/"},{en:"best regards",vi:"trân trọng",week:4,phon:"/best rɪˈɡɑːrdz/"},
-  {en:"please",vi:"xin / vui lòng",week:4,phon:"/pliːz/"},{en:"writing",vi:"đang viết",week:4,phon:"/ˈraɪ.tɪŋ/"},
-  {en:"reading",vi:"đang đọc",week:4,phon:"/ˈriː.dɪŋ/"},{en:"preparing",vi:"đang chuẩn bị",week:4,phon:"/prɪˈpeər.ɪŋ/"},
-  {en:"working",vi:"đang làm việc",week:4,phon:"/ˈwɜː.kɪŋ/"},{en:"question",vi:"câu hỏi",week:4,phon:"/ˈkwes.tʃən/"},
-  {en:"answer",vi:"câu trả lời",week:4,phon:"/ˈɑːn.sər/"}
-];
-
-let deck = [];
-let current = 0;
-let isFlipped = false;
-let scores = {hard:0, ok:0, easy:0};
-let hardCards = [];
-let currentWeek = 0;
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+var D=[{"en":"I am","vi":"tôi là","week":1,"phon":"/ai æm/","u1":"I am a prosecutor at the People Procuracy.","v1":"Tôi là kiểm sát viên tại Viện Kiểm sát Nhân dân.","u2":"I am not available this afternoon.","v2":"Tôi không rảnh chiều nay.","note":"I am chỉ dùng với chủ ngữ I. Viết tắt Im. Dùng để giới thiệu bản thân và mô tả trạng thái."},{"en":"he is","vi":"anh ấy là","week":1,"phon":"/hiː ɪz/","u1":"He is the director of our department.","v1":"Anh ấy là giám đốc phòng ban chúng tôi.","u2":"He is very experienced in criminal cases.","v2":"Anh ấy rất có kinh nghiệm về các vụ án hình sự.","note":"Dùng cho chủ ngữ nam số ít. Viết tắt Hes. Tương tự She is, It is."},{"en":"she is","vi":"cô ấy là","week":1,"phon":"/ʃiː ɪz/","u1":"She is a dedicated lawyer with ten years of experience.","v1":"Cô ấy là luật sư tận tụy với mười năm kinh nghiệm.","u2":"She is currently handling three cases.","v2":"Cô ấy hiện đang xử lý ba vụ án.","note":"Dùng cho chủ ngữ nữ số ít. Viết tắt Shes."},{"en":"we are","vi":"chúng tôi là","week":1,"phon":"/wiː ɑːr/","u1":"We are responsible for reviewing this case file.","v1":"Chúng tôi chịu trách nhiệm xem xét hồ sơ vụ án này.","u2":"We are a team of five prosecutors.","v2":"Chúng tôi là một nhóm năm kiểm sát viên.","note":"Dùng khi gồm cả bản thân lẫn người khác. Viết tắt Were."},{"en":"they are","vi":"họ là","week":1,"phon":"/ðeɪ ɑːr/","u1":"They are witnesses in this criminal trial.","v1":"Họ là nhân chứng trong phiên toà hình sự này.","u2":"They are not guilty according to the verdict.","v2":"Họ không có tội theo phán quyết.","note":"Dùng cho nhóm không bao gồm bản thân. Viết tắt Theyre."},{"en":"name","vi":"tên","week":1,"phon":"/neɪm/","u1":"My name is Cactus. What is your name?","v1":"Tên tôi là Cactus. Tên bạn là gì?","u2":"Please write your full name on the document.","v2":"Vui lòng ghi họ tên đầy đủ lên tài liệu.","note":"Cụm hay dùng: My name is... để tự giới thiệu. Full name là họ tên đầy đủ."},{"en":"job","vi":"công việc","week":1,"phon":"/dʒɒb/","u1":"My job is to examine evidence and build the prosecution case.","v1":"Công việc của tôi là xem xét chứng cứ và xây dựng hồ sơ truy tố.","u2":"What is your job?","v2":"Công việc của bạn là gì?","note":"Phân biệt: job là việc làm cụ thể, work là làm việc nói chung. Go to work, KHÔNG nói go to the work."},{"en":"family","vi":"gia đình","week":1,"phon":"/ˈfæm.ɪ.li/","u1":"My family has four members: my wife, two children, and me.","v1":"Gia đình tôi có bốn thành viên: vợ, hai con và tôi.","u2":"Family support is important during difficult cases.","v2":"Sự hỗ trợ của gia đình rất quan trọng trong những vụ án khó.","note":"Danh từ số ít chỉ tập thể. My family is... hoặc My family are... đều được chấp nhận."},{"en":"friend","vi":"bạn","week":1,"phon":"/frend/","u1":"He is a close friend and former colleague.","v1":"Anh ấy là bạn thân và đồng nghiệp cũ.","u2":"I made many friends during my law training.","v2":"Tôi kết bạn được nhiều trong thời gian đào tạo luật.","note":"Cụm: make friends là kết bạn, best friend là bạn thân nhất, old friend là bạn quen lâu."},{"en":"colleague","vi":"đồng nghiệp","week":1,"phon":"/ˈkɒl.iːɡ/","u1":"My colleague and I are preparing for the trial tomorrow.","v1":"Tôi và đồng nghiệp đang chuẩn bị cho phiên toà ngày mai.","u2":"I would like to introduce my colleague, Ms. Lan.","v2":"Tôi muốn giới thiệu đồng nghiệp của tôi, cô Lan.","note":"Trang trọng hơn coworker. Hay dùng trong email và môi trường chính thức."},{"en":"wife","vi":"vợ","week":1,"phon":"/waɪf/","u1":"My wife is a teacher at a local secondary school.","v1":"Vợ tôi là giáo viên tại một trường trung học địa phương.","u2":"The suspect wife provided an alibi for him.","v2":"Vợ nghi phạm đã cung cấp bằng chứng ngoại phạm cho anh ta.","note":"Chồng là husband. Vợ hoặc chồng nói chung dùng spouse trong văn bản pháp lý."},{"en":"husband","vi":"chồng","week":1,"phon":"/ˈhʌz.bənd/","u1":"Her husband is also a legal professional.","v1":"Chồng cô ấy cũng là người làm trong ngành pháp lý.","u2":"The victim husband was the first witness called.","v2":"Chồng của nạn nhân là nhân chứng đầu tiên được triệu tập.","note":"Vợ chồng nói chung dùng spouse trong văn bản pháp lý."},{"en":"son","vi":"con trai","week":1,"phon":"/sʌn/","u1":"His son is studying law at the national university.","v1":"Con trai anh ấy đang học luật tại trường đại học quốc gia.","u2":"The defendant son testified on his behalf.","v2":"Con trai bị cáo đã làm chứng thay mặt cha.","note":"Con gái là daughter. Con cái nói chung là child, số nhiều là children (bất quy tắc)."},{"en":"daughter","vi":"con gái","week":1,"phon":"/ˈdɔː.tər/","u1":"My daughter wants to become a lawyer when she grows up.","v1":"Con gái tôi muốn trở thành luật sư khi lớn lên.","u2":"The witness is the victim daughter.","v2":"Nhân chứng là con gái của nạn nhân.","note":"Phát âm là daw-ter, không đọc là dag-ter. Chữ gh trong daughter không được đọc."},{"en":"home","vi":"nhà","week":1,"phon":"/həʊm/","u1":"The suspect was not at home on the night of the incident.","v1":"Nghi phạm không ở nhà vào đêm xảy ra vụ việc.","u2":"I usually work from home on Fridays.","v2":"Tôi thường làm việc từ nhà vào các ngày thứ Sáu.","note":"Home là nơi sinh sống, house là ngôi nhà vật lý. Go home không có to."},{"en":"city","vi":"thành phố","week":1,"phon":"/ˈsɪt.i/","u1":"I work at the City People Procuracy.","v1":"Tôi làm việc tại Viện Kiểm sát Nhân dân thành phố.","u2":"The case was transferred to the city court.","v2":"Vụ án đã được chuyển lên toà án thành phố.","note":"Tỉnh là province. Quận huyện là district. Địa chỉ tiếng Anh viết từ số nhà đến thành phố."},{"en":"country","vi":"đất nước","week":1,"phon":"/ˈkʌn.tri/","u1":"Vietnam is a country with a comprehensive legal system.","v1":"Việt Nam là đất nước có hệ thống pháp luật toàn diện.","u2":"The suspect fled the country before the arrest warrant was issued.","v2":"Nghi phạm đã bỏ trốn khỏi đất nước trước khi lệnh bắt được ban hành.","note":"Không nhầm với countryside là vùng nông thôn. Flee the country là bỏ trốn khỏi đất nước."},{"en":"nice to meet you","vi":"rất vui được gặp bạn","week":1,"phon":"/naɪs tə miːt juː/","u1":"Nice to meet you, Mr. Nguyen. I have heard a lot about your work.","v1":"Rất vui được gặp anh Nguyễn. Tôi đã nghe nhiều về công việc của anh.","u2":"It was nice to meet you. I hope we can work together soon.","v2":"Thật vui khi được gặp anh. Tôi hy vọng chúng ta sớm có dịp hợp tác.","note":"Dùng lần đầu gặp mặt. Trả lời: Nice to meet you too hoặc Likewise. Gặp lại nói: Nice to see you again."},{"en":"prosecutor","vi":"kiểm sát viên","week":1,"phon":"/ˈprɒs.ɪ.kjuː.tər/","u1":"The prosecutor presented compelling evidence to prove the defendant guilt.","v1":"Kiểm sát viên trình bày chứng cứ thuyết phục để chứng minh tội lỗi của bị cáo.","u2":"As a prosecutor, I must ensure that justice is served fairly.","v2":"Là kiểm sát viên, tôi phải đảm bảo công lý được thực thi công bằng.","note":"Tiếng Anh Mỹ còn gọi là District Attorney. Tại toà: prosecution là bên công tố, defence là bên bào chữa."},{"en":"lawyer","vi":"luật sư","week":1,"phon":"/ˈlɔː.jər/","u1":"The defendant has the right to consult a lawyer before questioning.","v1":"Bị cáo có quyền tham khảo ý kiến luật sư trước khi bị thẩm vấn.","u2":"She hired an experienced criminal lawyer for her defence.","v2":"Cô ấy thuê một luật sư hình sự giàu kinh nghiệm để bào chữa.","note":"attorney là từ dùng ở Mỹ, barrister là luật sư biện hộ ở Anh, solicitor là luật sư tư vấn ở Anh."},{"en":"ready","vi":"sẵn sàng","week":1,"phon":"/ˈred.i/","u1":"Are you ready to present your findings to the committee?","v1":"Bạn đã sẵn sàng trình bày kết quả điều tra trước ủy ban chưa?","u2":"The prosecution team is ready for the trial next Monday.","v2":"Nhóm công tố đã sẵn sàng cho phiên toà thứ Hai tới.","note":"Cấu trúc: Are you ready? hoặc I am ready hoặc get ready để nhấn vào quá trình chuẩn bị."},{"en":"busy","vi":"bận","week":1,"phon":"/ˈbɪz.i/","u1":"I am very busy this week, I have three cases to review.","v1":"Tuần này tôi rất bận, tôi có ba vụ án cần xem xét.","u2":"Sorry, I cannot attend because I am busy with an urgent matter.","v2":"Xin lỗi, tôi không thể dự vì tôi đang bận việc khẩn.","note":"Trái nghĩa là free hoặc available. Cụm: too busy to làm gì, busy schedule là lịch bận rộn."},{"en":"tired","vi":"mệt","week":1,"phon":"/ˈtaɪəd/","u1":"I am tired after reviewing documents all day.","v1":"Tôi mệt sau khi xem xét tài liệu cả ngày.","u2":"The team looked tired but satisfied after winning the case.","v2":"Nhóm trông có vẻ mệt nhưng hài lòng sau khi thắng vụ kiện.","note":"tired of something có nghĩa là chán cái gì đó, ví dụ I am tired of paperwork."},{"en":"happy","vi":"vui","week":1,"phon":"/ˈhæp.i/","u1":"I am happy to inform you that the case has been resolved.","v1":"Tôi vui mừng thông báo rằng vụ án đã được giải quyết.","u2":"The victim family was happy with the court decision.","v2":"Gia đình nạn nhân hài lòng với quyết định của toà án.","note":"Trong email trang trọng I am happy to inform you là cách mở đầu tin tốt rất phổ biến."},{"en":"director","vi":"giám đốc","week":1,"phon":"/dɪˈrek.tər/","u1":"The director of the Procuracy approved the indictment.","v1":"Giám đốc Viện Kiểm sát đã phê duyệt bản cáo trạng.","u2":"Please submit this report to the director by end of day.","v2":"Vui lòng nộp báo cáo này cho giám đốc trước cuối ngày.","note":"Phân biệt: manager là quản lý cấp trung, director là lãnh đạo cấp cao hơn, head hoặc chief là trưởng."},{"en":"work","vi":"làm việc","week":2,"phon":"/wɜːrk/","u1":"I work at the District People Procuracy in Hanoi.","v1":"Tôi làm việc tại Viện Kiểm sát Nhân dân quận ở Hà Nội.","u2":"We work closely with the police during investigations.","v2":"Chúng tôi làm việc chặt chẽ với cảnh sát trong quá trình điều tra.","note":"Work là cả động từ và danh từ. Go to work là đi làm, KHÔNG nói go to the work."},{"en":"read","vi":"đọc","week":2,"phon":"/riːd/","u1":"I read case files every morning before the team briefing.","v1":"Tôi đọc hồ sơ vụ án mỗi sáng trước cuộc họp nhóm.","u2":"Please read the report carefully before signing.","v2":"Vui lòng đọc kỹ báo cáo trước khi ký.","note":"BẤT QUY TẮC: hiện tại đọc là riːd, quá khứ viết giống nhưng đọc là rɛd."},{"en":"write","vi":"viết","week":2,"phon":"/raɪt/","u1":"I need to write the indictment before the deadline on Friday.","v1":"Tôi cần viết cáo trạng trước hạn chót vào thứ Sáu.","u2":"She writes very clear and concise reports.","v2":"Cô ấy viết báo cáo rất rõ ràng và súc tích.","note":"Bất quy tắc: write, wrote, written. Cụm: write a report, write an email, write down là ghi chép lại."},{"en":"study","vi":"học","week":2,"phon":"/ˈstʌd.i/","u1":"I study English for 30 minutes every day.","v1":"Tôi học tiếng Anh 30 phút mỗi ngày.","u2":"He studied law at Hanoi Law University.","v2":"Anh ấy học luật tại Đại học Luật Hà Nội.","note":"He studies thêm -ies. Study là học có chủ ý, khác learn là học và tiếp thu được kết quả."},{"en":"meet","vi":"gặp","week":2,"phon":"/miːt/","u1":"I will meet the witness tomorrow afternoon at 2 p.m.","v1":"Tôi sẽ gặp nhân chứng vào chiều mai lúc 2 giờ.","u2":"Nice to meet you, I have been looking forward to this.","v2":"Rất vui được gặp anh, tôi đã mong chờ buổi gặp này.","note":"Bất quy tắc: meet, met. Meet a deadline là đáp ứng hạn chót, nghĩa bóng rất quan trọng trong công việc."},{"en":"start","vi":"bắt đầu","week":2,"phon":"/stɑːrt/","u1":"The trial will start at 8 a.m. sharp tomorrow.","v1":"Phiên toà sẽ bắt đầu đúng 8 giờ sáng ngày mai.","u2":"Let us start with a review of the key evidence.","v2":"Hãy bắt đầu với việc xem lại những chứng cứ chính.","note":"Start và begin gần nghĩa. Start thông dụng hơn. Begin trang trọng hơn trong văn bản."},{"en":"finish","vi":"kết thúc","week":2,"phon":"/ˈfɪn.ɪʃ/","u1":"I finished reviewing all the evidence this morning.","v1":"Tôi đã hoàn thành xem xét toàn bộ chứng cứ sáng nay.","u2":"When will you finish the investigation report?","v2":"Khi nào anh sẽ hoàn thành báo cáo điều tra?","note":"Finish cộng V-ing: finish writing đúng, finish to write sai. Đồng nghĩa trang trọng hơn là complete."},{"en":"prepare","vi":"chuẩn bị","week":2,"phon":"/prɪˈpeər/","u1":"We need to prepare thoroughly for the cross-examination.","v1":"Chúng ta cần chuẩn bị kỹ lưỡng cho phần thẩm vấn chéo.","u2":"I am preparing the closing argument for tomorrow hearing.","v2":"Tôi đang chuẩn bị lời luận tội kết thúc cho phiên điều trần ngày mai.","note":"Cụm: prepare for là chuẩn bị cho, prepare a document là soạn thảo tài liệu."},{"en":"report","vi":"báo cáo","week":2,"phon":"/rɪˈpɔːrt/","u1":"I need to submit the monthly report to the director by Friday.","v1":"Tôi cần nộp báo cáo tháng cho giám đốc trước thứ Sáu.","u2":"The investigation report contains all key findings.","v2":"Báo cáo điều tra chứa đựng tất cả những phát hiện quan trọng.","note":"Report là cả danh từ và động từ. Động từ report to someone là báo cáo cho ai đó."},{"en":"attend","vi":"tham dự","week":2,"phon":"/əˈtend/","u1":"All prosecutors must attend the briefing at 7:30 a.m.","v1":"Tất cả kiểm sát viên phải tham dự buổi báo cáo lúc 7:30 sáng.","u2":"I attended a legal training workshop last week.","v2":"Tôi đã tham dự một hội thảo đào tạo pháp lý tuần trước.","note":"Trang trọng hơn go to. Attend to có nghĩa khác là chú ý hoặc chăm sóc."},{"en":"always","vi":"luôn luôn","week":2,"phon":"/ˈɔːl.weɪz/","u1":"I always review my notes before entering the courtroom.","v1":"Tôi luôn luôn xem lại ghi chú trước khi vào phòng xử án.","u2":"She always arrives early to prepare for hearings.","v2":"Cô ấy luôn đến sớm để chuẩn bị cho các buổi điều trần.","note":"Đứng TRƯỚC động từ thường nhưng SAU to be. I always work đúng, I work always sai."},{"en":"usually","vi":"thường","week":2,"phon":"/ˈjuː.ʒu.ə.li/","u1":"I usually start work at 7:30 and finish at 5:30.","v1":"Tôi thường bắt đầu làm việc lúc 7:30 và kết thúc lúc 5:30.","u2":"We usually hold team meetings on Monday mornings.","v2":"Chúng tôi thường họp nhóm vào sáng thứ Hai.","note":"Tần suất khoảng 70-80%. Thứ tự từ cao đến thấp: always, usually, often, sometimes, rarely, never."},{"en":"often","vi":"hay","week":2,"phon":"/ˈɒf.ən/","u1":"I often work late when there is an important case.","v1":"Tôi hay làm việc muộn khi có vụ án quan trọng.","u2":"Prosecutors often collaborate with investigators.","v2":"Kiểm sát viên thường xuyên phối hợp với điều tra viên.","note":"Tần suất khoảng 60%. Đồng nghĩa trang trọng là frequently. Hỏi: How often do you...?"},{"en":"sometimes","vi":"thỉnh thoảng","week":2,"phon":"/ˈsʌm.taɪmz/","u1":"I sometimes work from home when reviewing lengthy documents.","v1":"Tôi thỉnh thoảng làm việc ở nhà khi xem xét tài liệu dài.","u2":"Sometimes a case is more complicated than it first appears.","v2":"Thỉnh thoảng một vụ án phức tạp hơn ban đầu trông có vẻ.","note":"Sometimes có thể đứng đầu câu. Sometimes I work late bằng I sometimes work late, cả hai đều đúng."},{"en":"rarely","vi":"hiếm khi","week":2,"phon":"/ˈreər.li/","u1":"I rarely make mistakes because I always double-check my work.","v1":"Tôi hiếm khi mắc lỗi vì tôi luôn kiểm tra lại công việc.","u2":"Such a complex case rarely goes to trial this quickly.","v2":"Một vụ án phức tạp như vậy hiếm khi ra toà nhanh như vậy.","note":"Đồng nghĩa trang trọng là seldom. Nếu đứng đầu câu phải đảo ngữ: Rarely do I..."},{"en":"never","vi":"không bao giờ","week":2,"phon":"/ˈnev.ər/","u1":"I never allow personal bias to affect my legal judgment.","v1":"Tôi không bao giờ để thành kiến cá nhân ảnh hưởng đến phán xét pháp lý.","u2":"The suspect claimed he had never been to that location.","v2":"Nghi phạm khẳng định anh ta không bao giờ đến địa điểm đó.","note":"Never đã là phủ định, không thêm not nữa. I do not never là sai, I never là đúng."},{"en":"every day","vi":"mỗi ngày","week":2,"phon":"/ˈev.ri deɪ/","u1":"I exercise every day to stay focused and productive.","v1":"Tôi tập thể dục mỗi ngày để giữ sự tập trung và hiệu quả.","u2":"New case files arrive at our office every day.","v2":"Hồ sơ vụ án mới đến văn phòng chúng tôi mỗi ngày.","note":"Every day là hai từ và là trạng từ. Everyday là một từ và là tính từ nghĩa thông thường."},{"en":"speak","vi":"nói","week":2,"phon":"/spiːk/","u1":"I am learning to speak English fluently for international work.","v1":"Tôi đang học nói tiếng Anh trôi chảy cho công việc quốc tế.","u2":"Could you speak more slowly, please?","v2":"Bạn có thể nói chậm hơn không?","note":"Speak trang trọng hơn talk. Speak English là nói tiếng Anh. Say là nói nội dung gì. Tell là nói với ai."},{"en":"go","vi":"đi","week":2,"phon":"/ɡəʊ/","u1":"I go to court three times a week on average.","v1":"Tôi đi toà án trung bình ba lần một tuần.","u2":"Let us go over the evidence one more time before the hearing.","v2":"Hãy xem lại chứng cứ thêm một lần nữa trước buổi điều trần.","note":"Bất quy tắc: go, went, gone. Go over là xem lại, go through là đọc kỹ. Go home không có to."},{"en":"watch","vi":"xem","week":2,"phon":"/wɒtʃ/","u1":"I watch the news every evening to stay updated.","v1":"Tôi xem tin tức mỗi tối để cập nhật thông tin.","u2":"The officer watched the suspect carefully during questioning.","v2":"Cảnh sát theo dõi cẩn thận nghi phạm trong quá trình thẩm vấn.","note":"Watch là xem có chú ý như TV. See là thấy tự nhiên hoặc xem phim. Look là nhìn có chủ ý tại chỗ."},{"en":"office","vi":"văn phòng","week":2,"phon":"/ˈɒf.ɪs/","u1":"The prosecutor office is on the third floor.","v1":"Văn phòng kiểm sát viên ở tầng ba của toà nhà.","u2":"Please come to my office at 9 a.m. to discuss the case.","v2":"Vui lòng đến văn phòng tôi lúc 9 giờ sáng để thảo luận vụ án.","note":"In the office là ở trong VP. At the office là tại VP nhấn địa điểm. Tiếng Mỹ hay dùng at work hơn."},{"en":"court","vi":"toà án","week":2,"phon":"/kɔːrt/","u1":"The case will be heard in court next Tuesday.","v1":"Vụ án sẽ được xét xử tại toà án vào thứ Ba tới.","u2":"All parties must respect the authority of the court.","v2":"Tất cả các bên phải tôn trọng thẩm quyền của toà án.","note":"Cụm pháp lý: go to court, in court, court hearing, court order, Supreme Court là Toà án Tối cao."},{"en":"law","vi":"luật","week":2,"phon":"/lɔː/","u1":"The law requires that all suspects be treated fairly.","v1":"Luật pháp yêu cầu tất cả nghi phạm phải được đối xử công bằng.","u2":"I studied criminal law for four years at university.","v2":"Tôi học luật hình sự bốn năm tại trường đại học.","note":"Criminal law là luật hình sự, civil law là luật dân sự. Break the law là vi phạm pháp luật."},{"en":"news","vi":"tin tức","week":2,"phon":"/njuːz/","u1":"I follow the news closely to stay informed about major cases.","v1":"Tôi theo dõi tin tức chặt chẽ để cập nhật về các vụ án lớn.","u2":"The verdict made headline news across the country.","v2":"Phán quyết đã trở thành tin tức trang nhất trên toàn quốc.","note":"News dùng động từ số ít: The news is đúng, The news are sai. A piece of news là một tin."},{"en":"coffee","vi":"cà phê","week":2,"phon":"/ˈkɒf.i/","u1":"I always have a cup of coffee before reading case files.","v1":"Tôi luôn uống một tách cà phê trước khi đọc hồ sơ vụ án.","u2":"Shall we discuss this over coffee after the meeting?","v2":"Chúng ta có thể thảo luận điều này qua cà phê sau cuộc họp không?","note":"Grab a coffee là uống cà phê nhanh. Coffee break là giờ giải lao. Hay dùng để tạo không khí thân thiện."},{"en":"yesterday","vi":"hôm qua","week":3,"phon":"/ˈjes.tə.deɪ/","u1":"Yesterday, I attended a hearing that lasted six hours.","v1":"Hôm qua, tôi đã tham dự một buổi điều trần kéo dài sáu tiếng.","u2":"The suspect was arrested yesterday evening at the airport.","v2":"Nghi phạm bị bắt giữ tối qua tại sân bay.","note":"Luôn đi với QUÁ KHỨ ĐƠN. Yesterday morning, afternoon, evening đều được. Yesterday night ít dùng, thay bằng last night."},{"en":"today","vi":"hôm nay","week":3,"phon":"/təˈdeɪ/","u1":"Today is the first day of the trial, we must be fully prepared.","v1":"Hôm nay là ngày đầu tiên của phiên toà, chúng ta phải chuẩn bị đầy đủ.","u2":"I have three meetings today and a report deadline at 5 p.m.","v2":"Hôm nay tôi có ba cuộc họp và hạn nộp báo cáo lúc 5 giờ chiều.","note":"Today dùng được với mọi thì tuỳ ngữ cảnh, hiện tại, quá khứ, hoặc tương lai đều được."},{"en":"tomorrow","vi":"ngày mai","week":3,"phon":"/təˈmɒr.əʊ/","u1":"Tomorrow, the prosecution will present its opening statement.","v1":"Ngày mai, bên công tố sẽ trình bày lời mở đầu.","u2":"I will send you the documents tomorrow morning.","v2":"Tôi sẽ gửi cho bạn tài liệu vào sáng mai.","note":"Luôn đi với thì TƯƠNG LAI. The day after tomorrow là ngày kia. Email trang trọng: by tomorrow là trước ngày mai."},{"en":"last week","vi":"tuần trước","week":3,"phon":"/lɑːst wiːk/","u1":"Last week, we submitted three indictments to the court.","v1":"Tuần trước, chúng tôi đã nộp ba bản cáo trạng lên toà án.","u2":"The witness changed her statement compared to last week.","v2":"Nhân chứng đã thay đổi lời khai so với tuần trước.","note":"Last cộng thời gian luôn dùng với quá khứ đơn: last week, last month, last year, last Monday."},{"en":"morning","vi":"buổi sáng","week":3,"phon":"/ˈmɔː.nɪŋ/","u1":"Every morning, I review my schedule and prioritise urgent tasks.","v1":"Mỗi buổi sáng, tôi xem lại lịch và ưu tiên các nhiệm vụ khẩn cấp nhất.","u2":"The hearing is scheduled for 8:30 in the morning.","v2":"Buổi điều trần được lên lịch vào 8:30 sáng.","note":"In the morning, in the afternoon, in the evening nhưng at night không phải in the night."},{"en":"afternoon","vi":"buổi chiều","week":3,"phon":"/ˌɑːf.təˈnuːn/","u1":"The court resumes at 1:30 in the afternoon after lunch.","v1":"Toà tiếp tục lúc 1:30 chiều sau giờ nghỉ trưa.","u2":"I prefer to write reports in the afternoon when it is quieter.","v2":"Tôi thích viết báo cáo vào buổi chiều khi yên tĩnh hơn.","note":"Afternoon từ trưa đến khoảng 6 giờ tối. Thứ tự: morning, afternoon, evening, night."},{"en":"evening","vi":"buổi tối","week":3,"phon":"/ˈiːv.nɪŋ/","u1":"I often review documents in the evening after dinner.","v1":"Tôi thường xem xét tài liệu vào buổi tối sau bữa cơm.","u2":"Good evening, thank you all for attending this late meeting.","v2":"Chào buổi tối, cảm ơn tất cả đã đến dự cuộc họp muộn này.","note":"Evening từ khoảng 6 giờ tối đến trước khi ngủ. Evening còn thức, night là đêm khuya khi ngủ."},{"en":"meeting","vi":"cuộc họp","week":3,"phon":"/ˈmiː.tɪŋ/","u1":"We have a team meeting every Monday at 7:30 a.m.","v1":"Chúng tôi có cuộc họp nhóm mỗi thứ Hai lúc 7:30 sáng.","u2":"Could someone take minutes for me? I cannot attend the meeting.","v2":"Ai đó có thể ghi biên bản thay tôi không? Tôi không thể dự họp.","note":"Hold a meeting là tổ chức họp, chair a meeting là chủ trì, meeting minutes là biên bản họp."},{"en":"case","vi":"vụ việc / vụ án","week":3,"phon":"/keɪs/","u1":"This case involves three defendants and over fifty pieces of evidence.","v1":"Vụ án này liên quan đến ba bị cáo và hơn năm mươi mục chứng cứ.","u2":"I have been working on this case for eight months.","v2":"Tôi đã làm việc trên vụ án này được tám tháng.","note":"Criminal case là vụ án hình sự, civil case là vụ kiện dân sự. Build a case là xây dựng hồ sơ truy tố."},{"en":"document","vi":"tài liệu","week":3,"phon":"/ˈdɒk.jʊ.mənt/","u1":"All documents submitted as evidence must be authenticated.","v1":"Tất cả tài liệu nộp làm chứng cứ phải được xác thực.","u2":"Please sign and return the document by end of week.","v2":"Vui lòng ký và trả lại tài liệu trước cuối tuần.","note":"Động từ document là ghi chép lập hồ sơ. Documentation là hồ sơ tổng hợp."},{"en":"decision","vi":"quyết định","week":3,"phon":"/dɪˈsɪʒ.ən/","u1":"The court decision will be announced at 10 a.m. tomorrow.","v1":"Quyết định của toà án sẽ được công bố lúc 10 giờ sáng ngày mai.","u2":"It was difficult but we decided to proceed with the prosecution.","v2":"Thật khó nhưng chúng tôi quyết định tiến hành truy tố.","note":"Make a decision là đưa ra quyết định, reach a decision là đi đến quyết định, court decision là phán quyết."},{"en":"went","vi":"đã đi","week":3,"phon":"/went/","u1":"I went to the crime scene yesterday to collect more evidence.","v1":"Tôi đã đến hiện trường tội phạm hôm qua để thu thập thêm chứng cứ.","u2":"The witness went to the police station voluntarily.","v2":"Nhân chứng đã tự nguyện đến đồn công an.","note":"go, went là quá khứ, gone là quá khứ phân từ. I went là quá khứ đơn, I have gone là đã đi và chưa về."},{"en":"had","vi":"đã có","week":3,"phon":"/hæd/","u1":"The suspect had a solid alibi for the night of the crime.","v1":"Nghi phạm đã có bằng chứng ngoại phạm chắc chắn cho đêm xảy ra tội phạm.","u2":"We had a productive meeting with the investigation team last Friday.","v2":"Chúng tôi đã có một cuộc họp hiệu quả với nhóm điều tra thứ Sáu tuần trước.","note":"Had là quá khứ của have. Had better cộng V là lời khuyên mạnh: You had better attend."},{"en":"was","vi":"đã là (số ít)","week":3,"phon":"/wɒz/","u1":"The defendant was at home alone when the incident occurred.","v1":"Bị cáo đã ở nhà một mình khi vụ việc xảy ra.","u2":"It was a very complex case that required six months of investigation.","v2":"Đó là một vụ án rất phức tạp đòi hỏi sáu tháng điều tra.","note":"Was dùng cho I, He, She, It. Were dùng cho You, We, They. Câu điều kiện loại 2 dùng were cho tất cả."},{"en":"were","vi":"đã là (số nhiều)","week":3,"phon":"/wɜːr/","u1":"All suspects were present at the lineup for identification.","v1":"Tất cả nghi phạm đều có mặt trong hàng nhận dạng.","u2":"The witnesses were questioned separately to avoid influencing each other.","v2":"Các nhân chứng được thẩm vấn riêng để tránh ảnh hưởng lẫn nhau.","note":"QUAN TRỌNG: câu điều kiện loại 2 dùng were cho tất cả, If he were here dù chủ ngữ là he vẫn dùng were."},{"en":"did","vi":"đã làm","week":3,"phon":"/dɪd/","u1":"Did the suspect provide any explanation for his whereabouts?","v1":"Nghi phạm có đưa ra giải thích nào về hành tung của mình không?","u2":"I did not receive the documents you mentioned in your email.","v2":"Tôi không nhận được tài liệu bạn đề cập trong email.","note":"Sau did hoặc did not, động từ LUÔN ở dạng nguyên thể. Did he went sai, Did he go đúng."},{"en":"wrote","vi":"đã viết","week":3,"phon":"/rəʊt/","u1":"The judge wrote the verdict after two days of deliberation.","v1":"Thẩm phán đã viết phán quyết sau hai ngày nghị án.","u2":"I wrote a detailed report summarising all the evidence collected.","v2":"Tôi đã viết một báo cáo chi tiết tóm tắt tất cả chứng cứ đã thu thập.","note":"write, wrote, written. Written dùng với have has had: I have written."},{"en":"met","vi":"đã gặp","week":3,"phon":"/met/","u1":"I met the victim family for the first time yesterday.","v1":"Tôi đã gặp gia đình nạn nhân lần đầu tiên hôm qua.","u2":"We met the deadline and submitted all documents on time.","v2":"Chúng tôi đã đáp ứng hạn chót và nộp tất cả tài liệu đúng hạn.","note":"meet, met, met. Cả quá khứ đơn và quá khứ phân từ đều là met."},{"en":"said","vi":"đã nói","week":3,"phon":"/sed/","u1":"The witness said she saw the suspect leaving the building at 9 p.m.","v1":"Nhân chứng nói rằng cô ấy thấy nghi phạm rời toà nhà lúc 9 giờ tối.","u2":"The defendant said nothing during the entire questioning session.","v2":"Bị cáo không nói gì trong suốt buổi thẩm vấn.","note":"Phân biệt say và tell: say cộng nội dung, tell cộng người cộng nội dung."},{"en":"worked","vi":"đã làm việc","week":3,"phon":"/wɜːrkt/","u1":"I worked on this case for over a year before it went to trial.","v1":"Tôi đã làm việc trên vụ án này hơn một năm trước khi ra toà.","u2":"She worked closely with the forensic team to analyse the evidence.","v2":"Cô ấy đã làm việc chặt chẽ với nhóm pháp y để phân tích chứng cứ.","note":"Quá khứ có quy tắc thêm -ed. The work was completed là công việc đã hoàn thành."},{"en":"finished","vi":"đã hoàn thành","week":3,"phon":"/ˈfɪn.ɪʃt/","u1":"I finished writing the indictment at midnight last night.","v1":"Tôi đã hoàn thành việc viết cáo trạng lúc nửa đêm tối qua.","u2":"The investigation team has finished collecting all physical evidence.","v2":"Nhóm điều tra đã hoàn thành việc thu thập tất cả chứng cứ vật chất.","note":"Dùng trong quá khứ đơn I finished và hiện tại hoàn thành I have finished. Hay dùng trong email báo cáo tiến độ."},{"en":"prepared","vi":"đã chuẩn bị","week":3,"phon":"/prɪˈpeərd/","u1":"I prepared all the necessary documents before the court session.","v1":"Tôi đã chuẩn bị tất cả tài liệu cần thiết trước phiên toà.","u2":"The team prepared a detailed timeline of events for the jury.","v2":"Nhóm đã chuẩn bị một dòng thời gian chi tiết về các sự kiện cho bồi thẩm đoàn.","note":"Prepared cũng là tính từ: be prepared là sẵn sàng, well-prepared là chuẩn bị tốt."},{"en":"attended","vi":"đã tham dự","week":3,"phon":"/əˈten.dɪd/","u1":"I attended a legal seminar on international criminal law last week.","v1":"Tôi đã tham dự một hội thảo pháp lý về luật hình sự quốc tế tuần trước.","u2":"Only three of the five defendants attended the preliminary hearing.","v2":"Chỉ có ba trong số năm bị cáo đã tham dự buổi điều trần sơ bộ.","note":"Attend không cần giới từ. I attended the seminar đúng. Participate in cần giới từ in."},{"en":"studied","vi":"đã học","week":3,"phon":"/ˈstʌd.id/","u1":"I studied criminal procedure law for three years at university.","v1":"Tôi đã học luật tố tụng hình sự ba năm tại trường đại học.","u2":"She studied the case file thoroughly before the trial began.","v2":"Cô ấy đã nghiên cứu kỹ hồ sơ vụ án trước khi phiên toà bắt đầu.","note":"study thành studied, đổi y thành i rồi thêm -ed. Tương tự carry thành carried, apply thành applied."},{"en":"week","vi":"tuần","week":3,"phon":"/wiːk/","u1":"This week is very busy, I have five court appearances.","v1":"Tuần này rất bận, tôi có năm lần xuất hiện trước toà.","u2":"The report must be submitted by the end of the week.","v2":"Báo cáo phải được nộp trước cuối tuần.","note":"Cụm: this week, next week, last week, twice a week là hai lần mỗi tuần, weekly là hàng tuần."},{"en":"email","vi":"thư điện tử","week":4,"phon":"/ˈiː.meɪl/","u1":"Please send me an email with the case summary attached.","v1":"Vui lòng gửi cho tôi một email kèm tóm tắt vụ án.","u2":"I will follow up with an email confirming the details of our meeting.","v2":"Tôi sẽ theo dõi bằng một email xác nhận chi tiết cuộc họp của chúng ta.","note":"Mở đầu email trang trọng: I am writing to inform, to request, to follow up. Đây là mẫu cần thuộc lòng."},{"en":"phone","vi":"điện thoại","week":4,"phon":"/fəʊn/","u1":"Could you give me your phone number so I can contact you directly?","v1":"Bạn có thể cho tôi số điện thoại để tôi liên lạc trực tiếp không?","u2":"I will phone you tomorrow morning to confirm the appointment.","v2":"Tôi sẽ gọi điện cho bạn sáng mai để xác nhận lịch hẹn.","note":"Call someone hoặc phone someone hoặc give someone a call đều có nghĩa là gọi điện cho ai."},{"en":"schedule","vi":"lịch trình","week":4,"phon":"/ˈsked.juːl/","u1":"Can you check your schedule and confirm if you are available Thursday?","v1":"Bạn có thể kiểm tra lịch và xác nhận xem bạn có rảnh vào thứ Năm không?","u2":"The court schedule for next month has been published on the website.","v2":"Lịch xét xử của toà tháng tới đã được đăng trên website.","note":"Phát âm Mỹ là sked-juul, Anh là shed-juul. Schedule a meeting là lên lịch họp."},{"en":"deadline","vi":"hạn chót","week":4,"phon":"/ˈded.laɪn/","u1":"The deadline for submitting the indictment is this Friday at 5 p.m.","v1":"Hạn chót nộp cáo trạng là thứ Sáu này lúc 5 giờ chiều.","u2":"I always try to finish my work two days before the deadline.","v2":"Tôi luôn cố gắng hoàn thành công việc hai ngày trước hạn chót.","note":"Meet a deadline là đáp ứng hạn chót, miss a deadline là bỏ lỡ, extend a deadline là gia hạn."},{"en":"request","vi":"yêu cầu","week":4,"phon":"/rɪˈkwest/","u1":"I would like to request an extension for the submission deadline.","v1":"Tôi muốn yêu cầu gia hạn thời gian nộp báo cáo.","u2":"The defence submitted a request to review additional evidence.","v2":"Bên bào chữa đã nộp yêu cầu xem xét thêm chứng cứ.","note":"Request trang trọng hơn ask for. I kindly request trong email là rất lịch sự. Grant a request là chấp thuận."},{"en":"reply","vi":"trả lời","week":4,"phon":"/rɪˈplaɪ/","u1":"Please reply to this email at your earliest convenience.","v1":"Vui lòng trả lời email này khi sớm có dịp.","u2":"I am waiting for a reply from the court regarding the hearing date.","v2":"Tôi đang chờ phản hồi từ toà án về ngày điều trần.","note":"Reply đặc biệt dùng cho email hoặc thư. Respond trang trọng hơn. Reply to all là trả lời tất cả."},{"en":"information","vi":"thông tin","week":4,"phon":"/ˌɪn.fəˈmeɪ.ʃən/","u1":"For further information, please contact our office directly.","v1":"Để biết thêm thông tin, vui lòng liên hệ trực tiếp với văn phòng chúng tôi.","u2":"The witness provided key information that changed the direction of the case.","v2":"Nhân chứng đã cung cấp thông tin quan trọng làm thay đổi hướng vụ án.","note":"Information không đếm được, không có informations. A lot of information hoặc a piece of information."},{"en":"important","vi":"quan trọng","week":4,"phon":"/ɪmˈpɔː.tənt/","u1":"It is important that all evidence is properly documented and stored.","v1":"Điều quan trọng là tất cả chứng cứ phải được lập hồ sơ và lưu trữ đúng cách.","u2":"This is the most important witness in the entire case.","v2":"Đây là nhân chứng quan trọng nhất trong toàn bộ vụ án.","note":"So sánh: more important, the most important. It is important to hoặc it is important that."},{"en":"available","vi":"rảnh / sẵn có","week":4,"phon":"/əˈveɪ.lə.bəl/","u1":"Are you available for a meeting on Wednesday afternoon?","v1":"Bạn có rảnh để họp vào chiều thứ Tư không?","u2":"The full case file is available for review in my office.","v2":"Hồ sơ vụ án đầy đủ có thể xem tại văn phòng tôi.","note":"Hai nghĩa: rảnh khi nói về người I am available, sẵn có khi nói về vật the document is available."},{"en":"now","vi":"bây giờ","week":4,"phon":"/naʊ/","u1":"I am now reviewing the final draft of the indictment.","v1":"Tôi hiện đang xem xét bản nháp cuối cùng của cáo trạng.","u2":"We need to act now before the evidence is destroyed.","v2":"Chúng ta cần hành động ngay bây giờ trước khi chứng cứ bị tiêu hủy.","note":"As of now là kể từ bây giờ. Right now là ngay lúc này. Now let me explain là chuyển ý trong bài nói."},{"en":"attach","vi":"đính kèm","week":4,"phon":"/əˈtætʃ/","u1":"Please find attached the completed report and supporting documents.","v1":"Vui lòng xem đính kèm báo cáo đã hoàn thành và các tài liệu hỗ trợ.","u2":"I have attached the evidence list for your review.","v2":"Tôi đã đính kèm danh sách chứng cứ để bạn xem xét.","note":"Please find attached là câu chuẩn khi gửi file qua email. Attachment là tệp đính kèm."},{"en":"send","vi":"gửi","week":4,"phon":"/send/","u1":"I will send the documents to you by email before noon.","v1":"Tôi sẽ gửi tài liệu cho bạn qua email trước buổi trưa.","u2":"Could you send me the updated version of the case summary?","v2":"Bạn có thể gửi cho tôi phiên bản cập nhật của tóm tắt vụ án không?","note":"Bất quy tắc: send, sent, sent. Kết email: I look forward to hearing from you."},{"en":"receive","vi":"nhận","week":4,"phon":"/rɪˈsiːv/","u1":"I received your email and will respond within 24 hours.","v1":"Tôi đã nhận được email của bạn và sẽ phản hồi trong vòng 24 giờ.","u2":"Please confirm when you receive this document.","v2":"Vui lòng xác nhận khi bạn nhận được tài liệu này.","note":"Hay nhầm chính tả recieve, nhớ quy tắc i trước e trừ sau c: re-c-eive đúng."},{"en":"need","vi":"cần","week":4,"phon":"/niːd/","u1":"I need more time to review all the evidence before the trial.","v1":"Tôi cần thêm thời gian để xem xét tất cả chứng cứ trước phiên toà.","u2":"We need to contact the witness immediately.","v2":"Chúng ta cần liên hệ với nhân chứng ngay lập tức.","note":"Need to cộng V là cần làm gì. Do not need to là không cần phải, khác must not là không được phép."},{"en":"dear","vi":"kính gửi","week":4,"phon":"/dɪər/","u1":"Dear Mr. Nguyen, I am writing to request a meeting at your earliest convenience.","v1":"Kính gửi ông Nguyễn, Tôi viết để đề nghị một cuộc gặp khi ông rảnh sớm nhất.","u2":"Dear colleagues, please be informed that the meeting has been rescheduled.","v2":"Kính gửi các đồng nghiệp, xin thông báo rằng cuộc họp đã được sắp xếp lại.","note":"Cấu trúc: Dear cộng tên hoặc chức danh. Không biết tên: Dear Sir hoặc Madam. Thân mật hơn: Hi tên."},{"en":"best regards","vi":"trân trọng","week":4,"phon":"/best rɪˈɡɑːrdz/","u1":"Best regards, Cactus, Prosecutor, District People Procuracy.","v1":"Trân trọng, Cactus, Kiểm sát viên, Viện Kiểm sát Nhân dân quận.","u2":"Please feel free to contact me if you need anything further. Best regards.","v2":"Vui lòng liên hệ nếu bạn cần thêm gì. Trân trọng.","note":"Thứ tự từ trang trọng đến thân mật: Yours faithfully, Yours sincerely, Best regards, Kind regards, Best, Thanks."},{"en":"please","vi":"xin / vui lòng","week":4,"phon":"/pliːz/","u1":"Please submit all required documents by 5 p.m. on Friday.","v1":"Vui lòng nộp tất cả tài liệu yêu cầu trước 5 giờ chiều thứ Sáu.","u2":"Could you please send me the updated case file as soon as possible?","v2":"Bạn có thể vui lòng gửi cho tôi hồ sơ vụ án cập nhật sớm nhất có thể không?","note":"Please đặt đầu câu hoặc cuối câu. Could you please là rất lịch sự. Kindly lịch sự hơn please trong văn bản."},{"en":"writing","vi":"đang viết","week":4,"phon":"/ˈraɪ.tɪŋ/","u1":"I am writing to follow up on our conversation last week.","v1":"Tôi đang viết để theo dõi cuộc trò chuyện của chúng ta tuần trước.","u2":"She is writing the final section of the prosecution report right now.","v2":"Cô ấy đang viết phần cuối của báo cáo công tố ngay lúc này.","note":"I am writing to là cách mở đầu email rất phổ biến. Dùng với inform, request, follow up, confirm."},{"en":"reading","vi":"đang đọc","week":4,"phon":"/ˈriː.dɪŋ/","u1":"I am currently reading through the 200-page investigation report.","v1":"Tôi hiện đang đọc qua báo cáo điều tra dài 200 trang.","u2":"Thank you for reading, please let me know if you have any questions.","v2":"Cảm ơn bạn đã đọc, vui lòng cho tôi biết nếu bạn có câu hỏi nào.","note":"A reading of the verdict là công bố phán quyết, quan trọng trong pháp lý."},{"en":"preparing","vi":"đang chuẩn bị","week":4,"phon":"/prɪˈpeər.ɪŋ/","u1":"I am currently preparing the closing argument for tomorrow trial.","v1":"Tôi hiện đang chuẩn bị lời luận tội kết thúc cho phiên toà ngày mai.","u2":"The team is preparing a comprehensive response to the defence claims.","v2":"Nhóm đang chuẩn bị phản hồi toàn diện cho các lập luận của bên bào chữa.","note":"Hay dùng khi cập nhật trạng thái: I am preparing hoặc I am busy preparing."},{"en":"working","vi":"đang làm việc","week":4,"phon":"/ˈwɜː.kɪŋ/","u1":"I am currently working on a complex fraud case.","v1":"Tôi hiện đang làm việc trên một vụ án gian lận phức tạp.","u2":"Our team is working hard to meet the court submission deadline.","v2":"Nhóm chúng tôi đang làm việc chăm chỉ để đáp ứng hạn nộp của toà án.","note":"Working on something là đang xử lý thực hiện. I am working on it là tôi đang xử lý."},{"en":"question","vi":"câu hỏi","week":4,"phon":"/ˈkwes.tʃən/","u1":"If you have any questions, please do not hesitate to contact me.","v1":"Nếu bạn có câu hỏi nào, vui lòng đừng ngần ngại liên hệ với tôi.","u2":"The prosecutor asked the witness a series of detailed questions.","v2":"Kiểm sát viên đã đặt cho nhân chứng một loạt câu hỏi chi tiết.","note":"Động từ question là thẩm vấn. Ask a question là đặt câu hỏi. Any questions là kết thúc bài trình bày."},{"en":"answer","vi":"câu trả lời","week":4,"phon":"/ˈɑːn.sər/","u1":"Please answer all questions truthfully and to the best of your knowledge.","v1":"Vui lòng trả lời tất cả câu hỏi một cách trung thực và theo hiểu biết tốt nhất của bạn.","u2":"I will answer your email as soon as I return from court.","v2":"Tôi sẽ trả lời email của bạn ngay khi tôi quay về từ toà án.","note":"Answer a question, answer an email, answer the phone. Answer là trực tiếp, reply đặc biệt cho email."}];
+var deck=[],cur=0,fl=false,sc=[0,0,0],hard=[],cw=0;
+function shuf(a){var b=a.slice(),i,j,t;for(i=b.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function g(id){return document.getElementById(id);}
+function setW(w){
+  cw=w;
+  var ts=document.querySelectorAll(".wtab"),i;
+  for(i=0;i<ts.length;i++)ts[i].className="wtab"+(i===w?" on":"");
+  deck=shuf(w===0?D:D.filter(function(c){return c.week===w;}));
+  cur=0;fl=false;sc=[0,0,0];hard=[];
+  updS();updP();showC();
+  g("dn").className="done";
+  g("ra").style.display="";
+  g("ca").style.display="";
+  disB();
+}
+function setTab(t){
+  var bs=document.querySelectorAll(".tbtn"),i;
+  for(i=0;i<bs.length;i++)bs[i].className="tbtn"+(i===t?" on":"");
+  g("p0").className="panel"+(t===0?" on":"");
+  g("p1").className="panel"+(t===1?" on":"");
+}
+function mkBack(c){
+  var h="";
+  h+="<div class=\"ublk\"><div class=\"ulbl\">VI DU 1</div>";
+  h+="<div class=\"usen\">"+c.u1+"</div>";
+  h+="<div class=\"utr\">"+c.v1+"</div></div>";
+  h+="<div class=\"ublk\"><div class=\"ulbl\">VI DU 2</div>";
+  h+="<div class=\"usen\">"+c.u2+"</div>";
+  h+="<div class=\"utr\">"+c.v2+"</div></div>";
+  if(c.note){
+    h+="<div class=\"nblk\"><div class=\"nlbl\">Ghi chu</div>";
+    h+="<div class=\"ntxt\">"+c.note+"</div></div>";
   }
-  return a;
+  return h;
 }
-
-function setWeek(w) {
-  currentWeek = w;
-  document.querySelectorAll('.week-tab').forEach((t,i) => {
-    t.classList.toggle('active', i === w);
-  });
-  deck = shuffle(w === 0 ? ALL_CARDS : ALL_CARDS.filter(c => c.week === w));
-  current = 0; isFlipped = false; scores = {hard:0,ok:0,easy:0}; hardCards = [];
-  updateStats(); showCard(); updateProgress();
-  document.getElementById('doneScreen').classList.remove('show');
-  document.getElementById('ratingArea').style.display = '';
-  document.getElementById('cardArea').style.display = '';
-  disableRating();
+function showC(){
+  if(cur>=deck.length){showDone();return;}
+  var c=deck[cur];
+  g("cen").textContent=c.en;
+  g("cph").textContent=c.phon?c.phon:"";
+  g("cben").textContent=c.en;
+  g("cbvi").textContent=c.vi;
+  g("cbb").innerHTML=mkBack(c);
+  g("ctag").textContent="T"+c.week;
+  g("cw").className="cwrap";
+  fl=false;disB();
 }
-
-function showCard() {
-  if (current >= deck.length) { showDone(); return; }
-  const card = deck[current];
-  document.getElementById('cardFrontWord').textContent = card.en;
-  document.getElementById('cardPhonetic').textContent = card.phon || '';
-  document.getElementById('cardBackWord').textContent = card.vi;
-  document.getElementById('cardWeekTag').textContent = 'T' + card.week;
-  const wrap = document.getElementById('cardWrap');
-  wrap.classList.remove('flipped');
-  isFlipped = false;
-  disableRating();
+function doFlip(){
+  if(!fl){g("cw").className="cwrap flip";fl=true;enB();}
+  else{g("cw").className="cwrap";fl=false;disB();}
 }
-
-function flipCard() {
-  const wrap = document.getElementById('cardWrap');
-  if (!isFlipped) {
-    wrap.classList.add('flipped');
-    isFlipped = true;
-    enableRating();
-  } else {
-    wrap.classList.remove('flipped');
-    isFlipped = false;
-    disableRating();
-  }
+function enB(){g("b1").className="rbtn r1 on";g("b2").className="rbtn r2 on";g("b3").className="rbtn r3 on";}
+function disB(){g("b1").className="rbtn r1";g("b2").className="rbtn r2";g("b3").className="rbtn r3";}
+function doRate(l){
+  if(!fl)return;
+  sc[l]++;
+  if(l===0)hard.push(deck[cur]);
+  cur++;updS();updP();showC();
 }
-
-function enableRating() {
-  ['btnHard','btnOk','btnEasy'].forEach(id => {
-    document.getElementById(id).classList.add('enabled');
-  });
+function updS(){
+  g("sh").textContent=sc[0];
+  g("so").textContent=sc[1];
+  g("se").textContent=sc[2];
 }
-
-function disableRating() {
-  ['btnHard','btnOk','btnEasy'].forEach(id => {
-    document.getElementById(id).classList.remove('enabled');
-  });
+function updP(){
+  var tot=deck.length,d=Math.min(cur,tot),p=tot?Math.round(d/tot*100):0;
+  g("pf").style.width=p+"%";
+  g("pt").textContent=d+"/"+tot;
+  g("pp").textContent=p+"%";
 }
-
-function rate(level) {
-  if (!isFlipped) return;
-  scores[level]++;
-  if (level === 'hard') hardCards.push(deck[current]);
-  current++;
-  updateStats(); updateProgress(); showCard();
+function showDone(){
+  g("dn").className="done on";
+  g("ra").style.display="none";
+  g("ca").style.display="none";
+  g("dh").textContent=sc[0];
+  g("do2").textContent=sc[1];
+  g("de").textContent=sc[2];
+  g("dsb").textContent="Ban vua on xong "+deck.length+" tu. Ket qua:";
+  g("brh").className="btnB"+(hard.length===0?" hide":"");
 }
-
-function updateStats() {
-  document.getElementById('statHard').textContent = scores.hard;
-  document.getElementById('statOk').textContent = scores.ok;
-  document.getElementById('statEasy').textContent = scores.easy;
+function doRestart(){
+  g("dn").className="done";
+  g("ra").style.display="";
+  g("ca").style.display="";
+  setW(cw);
 }
-
-function updateProgress() {
-  const total = deck.length;
-  const done = Math.min(current, total);
-  const pct = total ? Math.round(done/total*100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = done + ' / ' + total;
-  document.getElementById('progressPct').textContent = pct + '%';
+function doHard(){
+  if(!hard.length)return;
+  g("dn").className="done";
+  g("ra").style.display="";
+  g("ca").style.display="";
+  deck=shuf(hard);cur=0;fl=false;sc=[0,0,0];hard=[];
+  updS();updP();showC();disB();
 }
-
-function showDone() {
-  document.getElementById('doneScreen').classList.add('show');
-  document.getElementById('ratingArea').style.display = 'none';
-  document.getElementById('cardArea').style.display = 'none';
-  document.getElementById('doneHard').textContent = scores.hard;
-  document.getElementById('doneOk').textContent = scores.ok;
-  document.getElementById('doneEasy').textContent = scores.easy;
-  const total = deck.length;
-  document.getElementById('doneSubText').textContent =
-    `Bạn vừa ôn xong ${total} từ. Kết quả hôm nay:`;
-  document.getElementById('btnReviewHard').classList.toggle('hidden', hardCards.length === 0);
-}
-
-function restartAll() {
-  document.getElementById('doneScreen').classList.remove('show');
-  document.getElementById('ratingArea').style.display = '';
-  document.getElementById('cardArea').style.display = '';
-  setWeek(currentWeek);
-}
-
-function reviewHard() {
-  if (hardCards.length === 0) return;
-  document.getElementById('doneScreen').classList.remove('show');
-  document.getElementById('ratingArea').style.display = '';
-  document.getElementById('cardArea').style.display = '';
-  deck = shuffle(hardCards);
-  current = 0; isFlipped = false; scores = {hard:0,ok:0,easy:0}; hardCards = [];
-  updateStats(); showCard(); updateProgress();
-  disableRating();
-}
-
-// Init
-
-function speakWord(e) {
-  e.stopPropagation(); // không lật thẻ khi ấn loa
-  if (!deck.length || current >= deck.length) return;
-  const word = deck[current].en;
-  if (!window.speechSynthesis) return;
+function doSpeak(e){
+  e.stopPropagation();
+  if(!deck.length||cur>=deck.length)return;
+  if(!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(word);
-  utt.lang = 'en-US';
-  utt.rate = 0.85;
-  utt.pitch = 1;
-  const btn = document.getElementById('speakBtn');
-  btn.classList.add('speaking');
-  utt.onend = () => btn.classList.remove('speaking');
-  utt.onerror = () => btn.classList.remove('speaking');
-  window.speechSynthesis.speak(utt);
+  var u=new SpeechSynthesisUtterance(deck[cur].en);
+  u.lang="en-US";u.rate=0.85;
+  var b=g("csp");
+  b.style.background="rgba(184,134,11,0.3)";
+  u.onend=function(){b.style.background="";};
+  u.onerror=function(){b.style.background="";};
+  window.speechSynthesis.speak(u);
 }
-
-// Tự động đọc khi lật về mặt trước (tuỳ chọn - bỏ comment nếu muốn)
-// function autoSpeak() { speakWord({stopPropagation:()=>{}}); }
-setWeek(0);
-
-function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='flashcard'&&i===0)||(tab==='listen'&&i===1)));
-  document.getElementById('tabFlashcard').classList.toggle('show',tab==='flashcard');
-  document.getElementById('tabListen').classList.toggle('show',tab==='listen');
-}
+setW(0);
 </script>
 </body>
 </html>
