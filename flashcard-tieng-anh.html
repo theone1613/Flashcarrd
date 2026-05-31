@@ -688,6 +688,7 @@ function showCard() {
   if (current >= deck.length) { showDone(); return; }
   const card = deck[current];
   document.getElementById('cardFrontWord').textContent = card.en;
+  document.getElementById('cardPhonetic').textContent = card.phon || '';
   document.getElementById('cardBackWord').textContent = card.vi;
   document.getElementById('cardWeekTag').textContent = 'T' + card.week;
   const wrap = document.getElementById('cardWrap');
