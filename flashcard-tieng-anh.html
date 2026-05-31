@@ -390,6 +390,9 @@
 .listen-arrow{font-size:16px;color:rgba(245,240,232,0.2);flex-shrink:0;}
 .listen-note{font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;padding:10px 4px 16px;text-align:center;}
 .card-phonetic{font-size:12px;color:#888;font-style:italic;margin-top:4px;letter-spacing:0.5px;}
+.speak-btn{background:rgba(184,134,11,0.15);border:1px solid rgba(184,134,11,0.3);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:8px;transition:all 0.15s;font-size:16px;color:var(--gold);}
+.speak-btn:active{background:rgba(184,134,11,0.35);transform:scale(0.93);}
+.speak-btn.speaking{background:rgba(184,134,11,0.3);border-color:var(--gold);}
 .tab-content{display:none;flex:1;flex-direction:column;overflow-y:auto;min-height:0;}
 .tab-content.show{display:flex;}
 </style>
@@ -429,6 +432,7 @@
       <div class="card-label">TIẾNG ANH</div>
       <div class="card-word" id="cardFrontWord">—</div>
       <div class="card-phonetic" id="cardPhonetic"></div>
+      <button class="speak-btn" id="speakBtn" onclick="speakWord(event)" title="Nghe phát âm">🔊</button>
       <div class="tap-hint">Ấn để xem nghĩa</div>
       <div class="card-week-tag" id="cardWeekTag">T1</div>
     </div>
@@ -777,6 +781,26 @@ function reviewHard() {
 }
 
 // Init
+
+function speakWord(e) {
+  e.stopPropagation(); // không lật thẻ khi ấn loa
+  if (!deck.length || current >= deck.length) return;
+  const word = deck[current].en;
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(word);
+  utt.lang = 'en-US';
+  utt.rate = 0.85;
+  utt.pitch = 1;
+  const btn = document.getElementById('speakBtn');
+  btn.classList.add('speaking');
+  utt.onend = () => btn.classList.remove('speaking');
+  utt.onerror = () => btn.classList.remove('speaking');
+  window.speechSynthesis.speak(utt);
+}
+
+// Tự động đọc khi lật về mặt trước (tuỳ chọn - bỏ comment nếu muốn)
+// function autoSpeak() { speakWord({stopPropagation:()=>{}}); }
 setWeek(0);
 
 function switchTab(tab){
