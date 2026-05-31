@@ -389,6 +389,7 @@
 .listen-meta{font-size:10px;color:rgba(245,240,232,0.38);letter-spacing:0.3px;}
 .listen-arrow{font-size:16px;color:rgba(245,240,232,0.2);flex-shrink:0;}
 .listen-note{font-size:11px;color:rgba(245,240,232,0.3);font-style:italic;padding:10px 4px 16px;text-align:center;}
+.card-phonetic{font-size:12px;color:#888;font-style:italic;margin-top:4px;letter-spacing:0.5px;}
 .tab-content{display:none;flex:1;flex-direction:column;overflow-y:auto;min-height:0;}
 .tab-content.show{display:flex;}
 </style>
@@ -427,6 +428,7 @@
     <div class="card-face card-front">
       <div class="card-label">TIẾNG ANH</div>
       <div class="card-word" id="cardFrontWord">—</div>
+      <div class="card-phonetic" id="cardPhonetic"></div>
       <div class="tap-hint">Ấn để xem nghĩa</div>
       <div class="card-week-tag" id="cardWeekTag">T1</div>
     </div>
@@ -596,60 +598,60 @@
 <script>
 const ALL_CARDS = [
   // Tuần 1
-  {en:"I am",vi:"tôi là / tôi thì",week:1},{en:"he is",vi:"anh ấy là",week:1},
-  {en:"she is",vi:"cô ấy là",week:1},{en:"we are",vi:"chúng tôi là",week:1},
-  {en:"they are",vi:"họ là",week:1},{en:"name",vi:"tên",week:1},
-  {en:"job",vi:"công việc",week:1},{en:"family",vi:"gia đình",week:1},
-  {en:"friend",vi:"bạn",week:1},{en:"colleague",vi:"đồng nghiệp",week:1},
-  {en:"wife",vi:"vợ",week:1},{en:"husband",vi:"chồng",week:1},
-  {en:"son",vi:"con trai",week:1},{en:"daughter",vi:"con gái",week:1},
-  {en:"home",vi:"nhà",week:1},{en:"city",vi:"thành phố",week:1},
-  {en:"country",vi:"đất nước",week:1},{en:"nice to meet you",vi:"rất vui được gặp bạn",week:1},
-  {en:"prosecutor",vi:"kiểm sát viên",week:1},{en:"lawyer",vi:"luật sư",week:1},
-  {en:"ready",vi:"sẵn sàng",week:1},{en:"busy",vi:"bận",week:1},
-  {en:"tired",vi:"mệt",week:1},{en:"happy",vi:"vui",week:1},
-  {en:"director",vi:"giám đốc",week:1},
+  {en:"I am",vi:"tôi là / tôi thì",week:1,phon:"/ai æm/"},{en:"he is",vi:"anh ấy là",week:1,phon:"/hiː ɪz/"},
+  {en:"she is",vi:"cô ấy là",week:1,phon:"/ʃiː ɪz/"},{en:"we are",vi:"chúng tôi là",week:1,phon:"/wiː ɑːr/"},
+  {en:"they are",vi:"họ là",week:1,phon:"/ðeɪ ɑːr/"},{en:"name",vi:"tên",week:1,phon:"/neɪm/"},
+  {en:"job",vi:"công việc",week:1,phon:"/dʒɒb/"},{en:"family",vi:"gia đình",week:1,phon:"/ˈfæm.ɪ.li/"},
+  {en:"friend",vi:"bạn",week:1,phon:"/frend/"},{en:"colleague",vi:"đồng nghiệp",week:1,phon:"/ˈkɒl.iːɡ/"},
+  {en:"wife",vi:"vợ",week:1,phon:"/waɪf/"},{en:"husband",vi:"chồng",week:1,phon:"/ˈhʌz.bənd/"},
+  {en:"son",vi:"con trai",week:1,phon:"/sʌn/"},{en:"daughter",vi:"con gái",week:1,phon:"/ˈdɔː.tər/"},
+  {en:"home",vi:"nhà",week:1,phon:"/həʊm/"},{en:"city",vi:"thành phố",week:1,phon:"/ˈsɪt.i/"},
+  {en:"country",vi:"đất nước",week:1,phon:"/ˈkʌn.tri/"},{en:"nice to meet you",vi:"rất vui được gặp bạn",week:1,phon:"/naɪs tə miːt juː/"},
+  {en:"prosecutor",vi:"kiểm sát viên",week:1,phon:"/ˈprɒs.ɪ.kjuː.tər/"},{en:"lawyer",vi:"luật sư",week:1,phon:"/ˈlɔː.jər/"},
+  {en:"ready",vi:"sẵn sàng",week:1,phon:"/ˈred.i/"},{en:"busy",vi:"bận",week:1,phon:"/ˈbɪz.i/"},
+  {en:"tired",vi:"mệt",week:1,phon:"/ˈtaɪəd/"},{en:"happy",vi:"vui",week:1,phon:"/ˈhæp.i/"},
+  {en:"director",vi:"giám đốc",week:1,phon:"/dɪˈrek.tər/"},
   // Tuần 2
-  {en:"work",vi:"làm việc",week:2},{en:"read",vi:"đọc",week:2},
-  {en:"write",vi:"viết",week:2},{en:"study",vi:"học",week:2},
-  {en:"meet",vi:"gặp",week:2},{en:"start",vi:"bắt đầu",week:2},
-  {en:"finish",vi:"kết thúc",week:2},{en:"prepare",vi:"chuẩn bị",week:2},
-  {en:"report",vi:"báo cáo",week:2},{en:"attend",vi:"tham dự",week:2},
-  {en:"always",vi:"luôn luôn",week:2},{en:"usually",vi:"thường",week:2},
-  {en:"often",vi:"hay",week:2},{en:"sometimes",vi:"thỉnh thoảng",week:2},
-  {en:"rarely",vi:"hiếm khi",week:2},{en:"never",vi:"không bao giờ",week:2},
-  {en:"every day",vi:"mỗi ngày",week:2},{en:"speak",vi:"nói",week:2},
-  {en:"go",vi:"đi",week:2},{en:"watch",vi:"xem",week:2},
-  {en:"office",vi:"văn phòng",week:2},{en:"court",vi:"toà án",week:2},
-  {en:"law",vi:"luật",week:2},{en:"news",vi:"tin tức",week:2},
-  {en:"coffee",vi:"cà phê",week:2},
+  {en:"work",vi:"làm việc",week:2,phon:"/wɜːrk/"},{en:"read",vi:"đọc",week:2,phon:"/riːd/"},
+  {en:"write",vi:"viết",week:2,phon:"/raɪt/"},{en:"study",vi:"học",week:2,phon:"/ˈstʌd.i/"},
+  {en:"meet",vi:"gặp",week:2,phon:"/miːt/"},{en:"start",vi:"bắt đầu",week:2,phon:"/stɑːrt/"},
+  {en:"finish",vi:"kết thúc",week:2,phon:"/ˈfɪn.ɪʃ/"},{en:"prepare",vi:"chuẩn bị",week:2,phon:"/prɪˈpeər/"},
+  {en:"report",vi:"báo cáo",week:2,phon:"/rɪˈpɔːrt/"},{en:"attend",vi:"tham dự",week:2,phon:"/əˈtend/"},
+  {en:"always",vi:"luôn luôn",week:2,phon:"/ˈɔːl.weɪz/"},{en:"usually",vi:"thường",week:2,phon:"/ˈjuː.ʒu.ə.li/"},
+  {en:"often",vi:"hay",week:2,phon:"/ˈɒf.ən/"},{en:"sometimes",vi:"thỉnh thoảng",week:2,phon:"/ˈsʌm.taɪmz/"},
+  {en:"rarely",vi:"hiếm khi",week:2,phon:"/ˈreər.li/"},{en:"never",vi:"không bao giờ",week:2,phon:"/ˈnev.ər/"},
+  {en:"every day",vi:"mỗi ngày",week:2,phon:"/ˈev.ri deɪ/"},{en:"speak",vi:"nói",week:2,phon:"/spiːk/"},
+  {en:"go",vi:"đi",week:2,phon:"/ɡəʊ/"},{en:"watch",vi:"xem",week:2,phon:"/wɒtʃ/"},
+  {en:"office",vi:"văn phòng",week:2,phon:"/ˈɒf.ɪs/"},{en:"court",vi:"toà án",week:2,phon:"/kɔːrt/"},
+  {en:"law",vi:"luật",week:2,phon:"/lɔː/"},{en:"news",vi:"tin tức",week:2,phon:"/njuːz/"},
+  {en:"coffee",vi:"cà phê",week:2,phon:"/ˈkɒf.i/"},
   // Tuần 3
-  {en:"yesterday",vi:"hôm qua",week:3},{en:"today",vi:"hôm nay",week:3},
-  {en:"tomorrow",vi:"ngày mai",week:3},{en:"last week",vi:"tuần trước",week:3},
-  {en:"morning",vi:"buổi sáng",week:3},{en:"afternoon",vi:"buổi chiều",week:3},
-  {en:"evening",vi:"buổi tối",week:3},{en:"meeting",vi:"cuộc họp",week:3},
-  {en:"case",vi:"vụ việc / vụ án",week:3},{en:"document",vi:"tài liệu",week:3},
-  {en:"decision",vi:"quyết định",week:3},{en:"went",vi:"đã đi (go)",week:3},
-  {en:"had",vi:"đã có (have)",week:3},{en:"was",vi:"đã là - số ít",week:3},
-  {en:"were",vi:"đã là - số nhiều",week:3},{en:"did",vi:"đã làm (do)",week:3},
-  {en:"wrote",vi:"đã viết (write)",week:3},{en:"met",vi:"đã gặp (meet)",week:3},
-  {en:"said",vi:"đã nói (say)",week:3},{en:"worked",vi:"đã làm việc",week:3},
-  {en:"finished",vi:"đã hoàn thành",week:3},{en:"prepared",vi:"đã chuẩn bị",week:3},
-  {en:"attended",vi:"đã tham dự",week:3},{en:"studied",vi:"đã học",week:3},
-  {en:"week",vi:"tuần",week:3},
+  {en:"yesterday",vi:"hôm qua",week:3,phon:"/ˈjes.tə.deɪ/"},{en:"today",vi:"hôm nay",week:3,phon:"/təˈdeɪ/"},
+  {en:"tomorrow",vi:"ngày mai",week:3,phon:"/təˈmɒr.əʊ/"},{en:"last week",vi:"tuần trước",week:3,phon:"/lɑːst wiːk/"},
+  {en:"morning",vi:"buổi sáng",week:3,phon:"/ˈmɔː.nɪŋ/"},{en:"afternoon",vi:"buổi chiều",week:3,phon:"/ˌɑːf.təˈnuːn/"},
+  {en:"evening",vi:"buổi tối",week:3,phon:"/ˈiːv.nɪŋ/"},{en:"meeting",vi:"cuộc họp",week:3,phon:"/ˈmiː.tɪŋ/"},
+  {en:"case",vi:"vụ việc / vụ án",week:3,phon:"/keɪs/"},{en:"document",vi:"tài liệu",week:3,phon:"/ˈdɒk.jʊ.mənt/"},
+  {en:"decision",vi:"quyết định",week:3,phon:"/dɪˈsɪʒ.ən/"},{en:"went",vi:"đã đi (go)",week:3,phon:"/went/"},
+  {en:"had",vi:"đã có (have)",week:3,phon:"/hæd/"},{en:"was",vi:"đã là - số ít",week:3,phon:"/wɒz/"},
+  {en:"were",vi:"đã là - số nhiều",week:3,phon:"/wɜːr/"},{en:"did",vi:"đã làm (do)",week:3,phon:"/dɪd/"},
+  {en:"wrote",vi:"đã viết (write)",week:3,phon:"/rəʊt/"},{en:"met",vi:"đã gặp (meet)",week:3,phon:"/met/"},
+  {en:"said",vi:"đã nói (say)",week:3,phon:"/sed/"},{en:"worked",vi:"đã làm việc",week:3,phon:"/wɜːrkt/"},
+  {en:"finished",vi:"đã hoàn thành",week:3,phon:"/ˈfɪn.ɪʃt/"},{en:"prepared",vi:"đã chuẩn bị",week:3,phon:"/prɪˈpeərd/"},
+  {en:"attended",vi:"đã tham dự",week:3,phon:"/əˈten.dɪd/"},{en:"studied",vi:"đã học",week:3,phon:"/ˈstʌd.id/"},
+  {en:"week",vi:"tuần",week:3,phon:"/wiːk/"},
   // Tuần 4
-  {en:"email",vi:"thư điện tử",week:4},{en:"phone",vi:"điện thoại",week:4},
-  {en:"schedule",vi:"lịch trình",week:4},{en:"deadline",vi:"hạn chót",week:4},
-  {en:"request",vi:"yêu cầu",week:4},{en:"reply",vi:"trả lời",week:4},
-  {en:"information",vi:"thông tin",week:4},{en:"important",vi:"quan trọng",week:4},
-  {en:"available",vi:"rảnh / sẵn có",week:4},{en:"now",vi:"bây giờ",week:4},
-  {en:"attach",vi:"đính kèm",week:4},{en:"send",vi:"gửi",week:4},
-  {en:"receive",vi:"nhận",week:4},{en:"need",vi:"cần",week:4},
-  {en:"dear",vi:"kính gửi",week:4},{en:"best regards",vi:"trân trọng",week:4},
-  {en:"please",vi:"xin / vui lòng",week:4},{en:"writing",vi:"đang viết",week:4},
-  {en:"reading",vi:"đang đọc",week:4},{en:"preparing",vi:"đang chuẩn bị",week:4},
-  {en:"working",vi:"đang làm việc",week:4},{en:"question",vi:"câu hỏi",week:4},
-  {en:"answer",vi:"câu trả lời",week:4}
+  {en:"email",vi:"thư điện tử",week:4,phon:"/ˈiː.meɪl/"},{en:"phone",vi:"điện thoại",week:4,phon:"/fəʊn/"},
+  {en:"schedule",vi:"lịch trình",week:4,phon:"/ˈsked.juːl/"},{en:"deadline",vi:"hạn chót",week:4,phon:"/ˈded.laɪn/"},
+  {en:"request",vi:"yêu cầu",week:4,phon:"/rɪˈkwest/"},{en:"reply",vi:"trả lời",week:4,phon:"/rɪˈplaɪ/"},
+  {en:"information",vi:"thông tin",week:4,phon:"/ˌɪn.fəˈmeɪ.ʃən/"},{en:"important",vi:"quan trọng",week:4,phon:"/ɪmˈpɔː.tənt/"},
+  {en:"available",vi:"rảnh / sẵn có",week:4,phon:"/əˈveɪ.lə.bəl/"},{en:"now",vi:"bây giờ",week:4,phon:"/naʊ/"},
+  {en:"attach",vi:"đính kèm",week:4,phon:"/əˈtætʃ/"},{en:"send",vi:"gửi",week:4,phon:"/send/"},
+  {en:"receive",vi:"nhận",week:4,phon:"/rɪˈsiːv/"},{en:"need",vi:"cần",week:4,phon:"/niːd/"},
+  {en:"dear",vi:"kính gửi",week:4,phon:"/dɪər/"},{en:"best regards",vi:"trân trọng",week:4,phon:"/best rɪˈɡɑːrdz/"},
+  {en:"please",vi:"xin / vui lòng",week:4,phon:"/pliːz/"},{en:"writing",vi:"đang viết",week:4,phon:"/ˈraɪ.tɪŋ/"},
+  {en:"reading",vi:"đang đọc",week:4,phon:"/ˈriː.dɪŋ/"},{en:"preparing",vi:"đang chuẩn bị",week:4,phon:"/prɪˈpeər.ɪŋ/"},
+  {en:"working",vi:"đang làm việc",week:4,phon:"/ˈwɜː.kɪŋ/"},{en:"question",vi:"câu hỏi",week:4,phon:"/ˈkwes.tʃən/"},
+  {en:"answer",vi:"câu trả lời",week:4,phon:"/ˈɑːn.sər/"}
 ];
 
 let deck = [];
